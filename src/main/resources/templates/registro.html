@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro - Grupo Antonio</title>
+    
+    <!-- Fuente moderna de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Iconos de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Archivo CSS -->
+    <link rel="stylesheet" href="/css/estiloRegistro.css">
+</head>
+<body>
+    <!-- Botón de volver -->
+    <a href="/usuario/login" class="boton-volver">
+        <i class="fas fa-arrow-left"></i>
+        <span>Volver</span>
+    </a>
+    
+    <div class="contenedor-registro">
+        <!-- Logo de Grupo Antonio -->
+        <div class="logo-registro">
+            <span class="logo-grupo">GRUPO</span><br>
+            <span class="logo-antonio">ANTONIO</span>
+        </div>
+        
+        <!-- Formulario de Registro -->
+        <div class="formulario-registro">
+            <h2 class="titulo-registro">Crear Cuenta</h2>
+            
+            <form action="/usuario/registro" method="POST">
+                <div class="campo-input">
+                    <i class="fas fa-user"></i>
+                    <input type="text" name="nombre" placeholder="Nombre completo" required>
+                </div>
+                
+                <div class="campo-input">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" name="email" placeholder="Correo electrónico" required>
+                </div>
+                
+                <div class="campo-input">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="password" placeholder="Contraseña" required>
+                </div>
+                
+                <div class="campo-input">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" name="confirmPassword" placeholder="Confirmar contraseña" required>
+                </div>
+                <div th:if="${error}" class="error-mensaje">
+    <p th:text="${error}"></p>
+</div>
+                
+                <button type="submit" class="boton-registro">Registrarse</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+    document.querySelector("form").addEventListener("submit", function(e) {
+    const password = document.querySelector("input[name='password']").value;
+    const confirmPassword = document.querySelector("input[name='confirmPassword']").value;
+
+    if (password !== confirmPassword) {
+        e.preventDefault(); // Detiene el envío del formulario
+        alert("Las contraseñas no coinciden.");
+    }
+});
+</script>
+
+</body>
+</html>

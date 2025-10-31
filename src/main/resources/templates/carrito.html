@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras - Grupo Antonio</title>
+    
+    <!-- Fuente moderna de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Iconos de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Archivo CSS -->
+    <link rel="stylesheet" href="/css/carritoEstilos.css">
+</head>
+<body>
+    
+    <!-- ENCABEZADO Y NAVEGACIÓN -->
+    <header class="encabezado">
+        <nav class="navegacion">
+    <!-- Logo de Grupo Antonio -->
+    <div class="logo">
+        <span class="logo-grupo">GRUPO</span>
+        <span class="logo-antonio">ANTONIO</span>
+    </div>
+
+    <!-- Menú de navegación -->
+    <ul class="menu-navegacion">
+        <li><a href="/" >Inicio</a></li>
+        <li><a href="/usuario/catalogo">Catálogo</a></li>
+        <li><a href="/usuario/servicios">Servicios</a></li>
+        <li><a href="/usuario/contacto">Contactos</a></li>
+    </ul>
+
+    <!-- Iconos de carrito y login -->
+    <div class="iconos-usuario">
+        <a href="/usuario/carrito" class="icono-enlace">
+            <i class="fas fa-shopping-cart"></i>
+        </a>
+        <a href="/usuario/login" class="icono-enlace login-box">
+            <i class="fas fa-user"></i>
+            <span class="login-text">Login →</span>
+        </a>
+    </div>
+
+    <!-- Botón menú móvil -->
+    <button class="boton-menu-movil">
+        <i class="fas fa-bars"></i>
+    </button>
+</nav>
+    </header>
+    
+    <!-- SECCIÓN DE BIENVENIDA CARRITO -->
+    <section class="seccion-bienvenida">
+        <div class="contenedor-bienvenida">
+            <div class="overlay-bienvenida"></div>
+            <div class="texto-bienvenida">
+                <h1 class="titulo-bienvenida">
+                    <span class="titulo-fondo">CARRO DE COMPRAS</span>
+                    CARRO DE COMPRAS
+                </h1>
+                <p class="subtitulo-bienvenida">REVISA TUS PRODUCTOS SELECCIONADOS</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- SECCIÓN PRODUCTOS DEL CARRITO -->
+    <section class="seccion-carrito">
+        <div class="contenedor">
+            <div class="grid-carrito">
+                <!-- Lista de productos -->
+                <div class="lista-productos-carrito">
+                    <h2 class="titulo-seccion-carrito">Productos en tu Carrito</h2>
+                    
+                    <!-- Producto 1 -->
+                    <div class="producto-carrito">
+                        <div class="imagen-producto">
+                            <img src="/imagenes/1_.jpg" alt="alt"/>
+                        </div>
+                        <div class="info-producto">
+                            <h3 class="nombre-producto">Bandeja Portacables Tipo Escalera</h3>
+                            <p class="descripcion-producto">Ideal para instalaciones industriales, fabricada en acero galvanizado</p>
+                            <button class="btn-eliminar">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </button>
+                        </div>
+                        <div class="precio-producto">
+                            <p class="precio">S/ 150.00</p>
+                            <p class="precio-unitario">por metro</p>
+                        </div>
+                        <div class="cantidad-producto">
+                            <button class="btn-cantidad btn-menos">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="number" class="input-cantidad" value="2" min="1">
+                            <button class="btn-cantidad btn-mas">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <div class="subtotal-producto">
+                            <p class="subtotal">S/ 300.00</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Producto 2 -->
+                    <div class="producto-carrito">
+                        <div class="imagen-producto">
+                            <img src="/imagenes/2_.jpg" alt="alt"/>
+                        </div>
+                        <div class="info-producto">
+                            <h3 class="nombre-producto">Bandeja Portacables Perforada</h3>
+                            <p class="descripcion-producto">Excelente ventilación para cables, perfecta para centros de datos</p>
+                            <button class="btn-eliminar">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </button>
+                        </div>
+                        <div class="precio-producto">
+                            <p class="precio">S/ 180.00</p>
+                            <p class="precio-unitario">por metro</p>
+                        </div>
+                        <div class="cantidad-producto">
+                            <button class="btn-cantidad btn-menos">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="number" class="input-cantidad" value="1" min="1">
+                            <button class="btn-cantidad btn-mas">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <div class="subtotal-producto">
+                            <p class="subtotal">S/ 180.00</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Producto 3 -->
+                    <div class="producto-carrito">
+                        <div class="imagen-producto">
+                            <img src="/imagenes/soporte.jpg" alt="alt"/>
+                        </div>
+                        <div class="info-producto">
+                            <h3 class="nombre-producto">Accesorios y Conectores</h3>
+                            <p class="descripcion-producto">Amplia variedad de accesorios para completar tu instalación</p>
+                            <button class="btn-eliminar">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </button>
+                        </div>
+                        <div class="precio-producto">
+                            <p class="precio">S/ 25.00</p>
+                            <p class="precio-unitario">por unidad</p>
+                        </div>
+                        <div class="cantidad-producto">
+                            <button class="btn-cantidad btn-menos">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="number" class="input-cantidad" value="5" min="1">
+                            <button class="btn-cantidad btn-mas">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                        <div class="subtotal-producto">
+                            <p class="subtotal">S/ 125.00</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Resumen del pedido -->
+                <div class="resumen-pedido">
+                    <h2 class="titulo-resumen">Resumen de Pedido</h2>
+                    
+                    <div class="detalle-resumen">
+                        <div class="linea-resumen">
+                            <span>Subtotal:</span>
+                            <span class="valor">S/ 605.00</span>
+                        </div>
+                        <div class="linea-resumen">
+                            <span>Envío:</span>
+                            <span class="valor">S/ 50.00</span>
+                        </div>
+                        <div class="linea-resumen">
+                            <span>IGV (18%):</span>
+                            <span class="valor">S/ 117.90</span>
+                        </div>
+                        <div class="separador-resumen"></div>
+                        <div class="linea-resumen total">
+                            <span>Total:</span>
+                            <span class="valor-total">S/ 772.90</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-continuar">
+                        <i class="fas fa-credit-card"></i>
+                        Continuar con la Comprobación
+                    </button>
+                    
+                    <button class="btn-seguir-comprando">
+                        <i class="fas fa-arrow-left"></i>
+                        Seguir Comprando
+                    </button>
+                    
+                    <div class="info-adicional">
+                        <p><i class="fas fa-shield-alt"></i> Compra 100% segura</p>
+                        <p><i class="fas fa-truck"></i> Envío a todo el Perú</p>
+                        <p><i class="fas fa-headset"></i> Soporte 24/7</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PIE DE PÁGINA -->
+    <footer class="pie-pagina">
+        <div class="contenedor">
+            <div class="contenido-footer">
+                <div class="columna-footer">
+                    <div class="logo-footer">
+                        <span class="logo-grupo">Grupo</span><br>
+                        <span class="logo-antonio">Antonio</span>
+                    </div>
+                    <p class="texto-footer">
+                        Las mejores bandejas portacables del Perú
+                    </p>
+                </div>
+                
+                <div class="separador-footer"></div>
+                
+                <div class="columna-footer">
+                    <h4 class="titulo-footer">Contacto</h4>
+                    <p class="texto-footer">
+                        <i class="fas fa-phone"></i> +51 937 487 697
+                    </p>
+                    <p class="texto-footer">
+                        <i class="fas fa-envelope"></i> info@grupoantonio.pe
+                    </p>
+                </div>
+                
+                <div class="columna-footer">
+                    <h4 class="titulo-footer">Síguenos</h4>
+                    <div class="redes-sociales">
+                        <a href="#" class="icono-red-social"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="icono-red-social"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="icono-red-social"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="columna-footer columna-direcciones">
+                    <h4 class="titulo-footer">Ubicaciones</h4>
+                    <p class="texto-footer">
+                        <i class="fas fa-map-marker-alt"></i> Av. Argentina 327 La Bellota int. N-6 Lima
+                    </p>
+                    <p class="texto-footer">
+                        <i class="fas fa-industry"></i> Asc. Agrop. Haras S/N, Huachipa, Lurigancho, Lima
+                    </p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 Grupo Antonio. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+    
+</body>
+</html>

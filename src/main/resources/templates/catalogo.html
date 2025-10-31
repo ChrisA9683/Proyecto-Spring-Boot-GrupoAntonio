@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo - Grupo Antonio</title>
+    
+    <!-- Fuente moderna de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Iconos de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Archivo CSS -->
+    <link rel="stylesheet" href="/css/catalogoEstilos.css">
+</head>
+<body>
+    
+    <!-- ENCABEZADO Y NAVEGACIÓN -->
+    <header class="encabezado">
+        <nav class="navegacion">
+    <!-- Logo de Grupo Antonio -->
+    <div class="logo">
+        <span class="logo-grupo">GRUPO</span>
+        <span class="logo-antonio">ANTONIO</span>
+    </div>
+
+    <!-- Menú de navegación -->
+    <ul class="menu-navegacion">
+        <li><a href="/">Inicio</a></li>
+        <li><a href="/usuario/catalogo" class="enlace-activo">Catálogo</a></li>
+        <li><a href="/usuario/servicios">Servicios</a></li>
+        <li><a href="/usuario/contacto">Contactos</a></li>
+    </ul>
+
+    <!-- Iconos de carrito y login -->
+    <div class="iconos-usuario">
+        <a href="/usuario/carrito" class="icono-enlace">
+            <i class="fas fa-shopping-cart"></i>
+        </a>
+        <a href="/usuario/login" class="icono-enlace login-box">
+            <i class="fas fa-user"></i>
+            <span class="login-text">Login →</span>
+        </a>
+    </div>
+
+    <!-- Botón menú móvil -->
+    <button class="boton-menu-movil">
+        <i class="fas fa-bars"></i>
+    </button>
+</nav>
+    </header>
+    
+    <!-- PRIMERA SECCIÓN: CATÁLOGO DE PRODUCTOS -->
+    <section class="seccion-catalogo">
+        <div class="contenedor">
+            <h1 class="titulo-catalogo">Catálogo de Productos</h1>
+            
+            <!-- Carrusel automático -->
+            <div class="carrusel-contenedor">
+                <div class="carrusel">
+                    <div class="carrusel-item activo">
+                        <img src="/imagenes/catalogo_one.jpg" alt="Producto 1">
+                    </div>
+                    <div class="carrusel-item">
+                        <img src="/imagenes/catalogo_two.jpg" alt="Producto 2">
+                    </div>
+                    <div class="carrusel-item">
+                        <img src="/imagenes/catalogo_tree.jpg" alt="Producto 3">
+                    </div>
+                </div>
+                <div class="carrusel-indicadores">
+                    <span class="indicador activo" data-slide="0"></span>
+                    <span class="indicador" data-slide="1"></span>
+                    <span class="indicador" data-slide="2"></span>
+                </div>
+            </div>
+            
+            <!-- Lista de productos -->
+
+            <div class="primer_catalogo">
+
+                <div class="producto-item">
+                    <img src="/imagenes/1_.jpg">
+                    <div class="Descripcion">
+                        <h3 class="producto-nombre">Bandeja Portacables Tipo Escalera</h3>
+                    <p class="producto-descripcion">Ideal para instalaciones industriales, fabricada en acero galvanizado de alta resistencia.</p>
+                    <p class="producto-precio">S/ 150.00 por metro</p>
+                    </div>
+                    
+                </div>
+
+                <div class="producto-item">
+                    <img src="/imagenes/2_.jpg">
+                    <div class="Descripcion">
+                        <h3 class="producto-nombre">Bandeja Portacables Tipo Escalera</h3>
+                        <p class="producto-descripcion">Ideal para instalaciones industriales, fabricada en acero galvanizado de alta resistencia.</p>
+                        <p class="producto-precio">S/ 150.00 por metro</p>
+                    </div>
+                   
+                </div>
+
+
+            </div>
+
+            <div class="lista-productos">
+                <div class="producto-item-general">
+                    <img src="/imagenes/Escalerillas.jpg">
+                    <div class="Descripcion">
+                        <h3 class="producto-nombre">Bandeja Portacables Tipo Escalera</h3>
+                        <p class="producto-descripcion">Ideal para instalaciones industriales, fabricada en acero galvanizado de alta resistencia.</p>
+                        <p class="producto-precio">S/ 150.00 por metro</p>
+                    </div>
+                    <div class="icono-comprar">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                </div>
+                
+                <div class="producto-item-general">
+                    <img src="/imagenes/bandejas.png">
+                    <div class="Descripcion">
+                        <h3 class="producto-nombre">Bandeja Portacables Perforada</h3>
+                        <p class="producto-descripcion">Excelente ventilación para cables, perfecta para centros de datos y telecomunicaciones.</p>
+                        <p class="producto-precio">S/ 180.00 por metro</p>
+                    </div>
+                    <div class="icono-comprar">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                </div>
+                
+                <div class="producto-item-general">
+                    <img src="/imagenes/bandeja-portacable-lisa.webp">
+                    <div class="Descripcion">
+                        <h3 class="producto-nombre">Bandeja Portacables Lisa</h3>
+                        <p class="producto-descripcion">Diseño elegante y funcional, ideal para instalaciones comerciales y residenciales.</p>
+                        <p class="producto-precio">S/ 165.00 por metro</p>
+                    </div>
+                    <div class="icono-comprar">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                </div>
+                
+                <div class="producto-item-general">
+                    <img src="/imagenes/bandejas.png">
+                    <div class="Descripcion">
+                        <h3 class="producto-nombre">Accesorios y Conectores</h3>
+                        <p class="producto-descripcion">Amplia variedad de accesorios para completar tu instalación de manera profesional.</p>
+                        <p class="producto-precio">Desde S/ 25.00</p>
+                    </div>
+                    <div class="icono-comprar">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                </div>
+                
+                <div class="producto-item-general">
+                    <img src="/imagenes/Escalerillas.jpg">
+                    <div class="Descripcion">
+                        <h3 class="producto-nombre">Bandeja Portacables Reforzada</h3>
+                        <p class="producto-descripcion">Para cargas pesadas, diseñada para proyectos industriales de gran envergadura.</p>
+                        <p class="producto-precio">S/ 220.00 por metro</p>
+                    </div>
+                    <div class="icono-comprar">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                </div>
+                
+                <div class="producto-item-general">
+                    <img src="/imagenes/bandejas.png">
+                    <div class="Descripcion">
+                        <h3 class="producto-nombre">Bandeja Portacables Galvanizada</h3>
+                        <p class="producto-descripcion">Resistente a la corrosión, perfecta para ambientes húmedos e instalaciones exteriores.</p>
+                        <p class="producto-precio">S/ 195.00 por metro</p>
+                    </div>
+                    <div class="icono-comprar">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                </div>
+                
+                <div class="producto-item-general">
+                    <img src="/imagenes/Escalerillas.jpg">
+                    <div class="Descripcion">
+                        <h3 class="producto-nombre">Bandeja Portacables Tipo Malla</h3>
+                        <p class="producto-descripcion">Diseño ligero y ventilado, ideal para centros de datos y telecomunicaciones.</p>
+                        <p class="producto-precio">S/ 170.00 por metro</p>
+                    </div>
+                    <div class="icono-comprar">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                </div>
+                
+                <div class="producto-item-general">
+                    <img src="/imagenes/Curva-horizontal-2.jpg">
+                    <div class="Descripcion">
+                        <h3 class="producto-nombre">Codos y Curvas 90°</h3>
+                        <p class="producto-descripcion">Accesorios de alta calidad para cambios de dirección en tu instalación.</p>
+                        <p class="producto-precio">S/ 45.00 por unidad</p>
+                    </div>
+                    <div class="icono-comprar">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                </div>
+                
+                <div class="producto-item-general">
+                    <img src="/imagenes/soporte.jpg">
+                    <div class="Descripcion">
+                        <h3 class="producto-nombre">Soportes y Ménsulas</h3>
+                        <p class="producto-descripcion">Sistema de soporte robusto para instalación segura de bandejas portacables.</p>
+                        <p class="producto-precio">Desde S/ 35.00</p>
+                    </div>
+                    <div class="icono-comprar">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- SEGUNDA SECCIÓN: PRODUCTOS DESTACADOS -->
+    <section class="seccion-destacados">
+        <div class="contenedor">
+            <h2 class="titulo-destacados">Productos Destacados</h2>
+        </div>
+    </section>
+    
+    <!-- TERCERA SECCIÓN: TARJETAS DE PRODUCTOS -->
+    <section class="seccion-tarjetas">
+        <div class="contenedor">
+            <div class="grid-tarjetas">
+                <!-- Tarjeta 1 -->
+                <div class="tarjeta-producto">
+                    <div class="tarjeta-imagen">
+                        <img src="/imagenes/image-removebg-preview.png" alt="Bandeja Escalera">
+                    </div>
+                    <div class="tarjeta-contenido">
+                        <h3 class="tarjeta-titulo">Bandeja Tipo Escalera</h3>
+                        <p class="tarjeta-descripcion">Sistema robusto y versátil para instalaciones industriales de alto rendimiento.</p>
+                        <button class="boton-ver-mas">Ver más</button>
+                    </div>
+                </div>
+                
+                <!-- Tarjeta 2 -->
+                <div class="tarjeta-producto">
+                    <div class="tarjeta-imagen">
+                        <img src="/imagenes/622-panduit-ducto-para-cableado-panduct-panemax-con-riel-din-solucion-de-gestion-de-cables-de-primer-nivel-para-enrutar-y-ocultar.jpeg" alt="Bandeja Perforada">
+                    </div>
+                    <div class="tarjeta-contenido">
+                        <h3 class="tarjeta-titulo">Bandeja Perforada</h3>
+                        <p class="tarjeta-descripcion">Óptima ventilación y gestión térmica para instalaciones de telecomunicaciones.</p>
+                        <button class="boton-ver-mas">Ver más</button>
+                    </div>
+                </div>
+                
+                <!-- Tarjeta 3 -->
+                <div class="tarjeta-producto">
+                    <div class="tarjeta-imagen">
+                        <img src="/imagenes/476178671_1131422328680481_1255960501018431618_n.jpg" alt="Bandeja Lisa">
+                    </div>
+                    <div class="tarjeta-contenido">
+                        <h3 class="tarjeta-titulo">Bandeja Lisa</h3>
+                        <p class="tarjeta-descripcion">Diseño limpio y moderno, perfecto para instalaciones comerciales elegantes.</p>
+                        <button class="boton-ver-mas">Ver más</button>
+                    </div>
+                </div>
+                
+                <!-- Tarjeta 4 -->
+                <div class="tarjeta-producto">
+                    <div class="tarjeta-imagen">
+                        <img src="/imagenes/476176719_1131428318679882_4463144649075994097_n.jpg" alt="Accesorios">
+                    </div>
+                    <div class="tarjeta-contenido">
+                        <h3 class="tarjeta-titulo">Accesorios Premium</h3>
+                        <p class="tarjeta-descripcion">Conectores, soportes y accesorios de la más alta calidad para tu proyecto.</p>
+                        <button class="boton-ver-mas">Ver más</button>
+                    </div>
+                </div>
+                
+                <!-- Tarjeta 5 -->
+                <div class="tarjeta-producto">
+                    <div class="tarjeta-imagen">
+                        <img src="/imagenes/image-removebg-preview.png" alt="Bandeja Reforzada">
+                    </div>
+                    <div class="tarjeta-contenido">
+                        <h3 class="tarjeta-titulo">Bandeja Reforzada</h3>
+                        <p class="tarjeta-descripcion">Capacidad de carga superior para proyectos industriales exigentes.</p>
+                        <button class="boton-ver-mas">Ver más</button>
+                    </div>
+                </div>
+                
+                <!-- Tarjeta 6 -->
+                <div class="tarjeta-producto">
+                    <div class="tarjeta-imagen">
+                        <img src="/imagenes/622-panduit-ducto-para-cableado-panduct-panemax-con-riel-din-solucion-de-gestion-de-cables-de-primer-nivel-para-enrutar-y-ocultar.jpeg" alt="Sistema Completo">
+                    </div>
+                    <div class="tarjeta-contenido">
+                        <h3 class="tarjeta-titulo">Sistema Completo</h3>
+                        <p class="tarjeta-descripcion">Solución integral con todos los componentes necesarios para tu instalación.</p>
+                        <button class="boton-ver-mas">Ver más</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- PIE DE PÁGINA -->
+    <footer class="pie-pagina">
+        <div class="contenedor">
+            <div class="contenido-footer">
+                <div class="columna-footer">
+                    <div class="logo-footer">
+                        <span class="logo-grupo">Grupo</span><br>
+                        <span class="logo-antonio">Antonio</span>
+                    </div>
+                    <p class="texto-footer">
+                        Las mejores bandejas portacables del Perú
+                    </p>
+                </div>
+                
+                <div class="separador-footer"></div>
+                
+                <div class="columna-footer">
+                    <h4 class="titulo-footer">Contacto</h4>
+                    <p class="texto-footer">
+                        <i class="fas fa-phone"></i> +51 937 487 697
+                    </p>
+                    <p class="texto-footer">
+                        <i class="fas fa-envelope"></i> info@grupoantonio.pe
+                    </p>
+                </div>
+                
+                <div class="columna-footer">
+                    <h4 class="titulo-footer">Síguenos</h4>
+                    <div class="redes-sociales">
+                        <a href="#" class="icono-red-social"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="icono-red-social"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="icono-red-social"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="columna-footer columna-direcciones">
+                    <h4 class="titulo-footer">Ubicaciones</h4>
+                    <p class="texto-footer">
+                        <i class="fas fa-map-marker-alt"></i> Av. Argentina 327 La Bellota int. N-6 Lima
+                    </p>
+                    <p class="texto-footer">
+                        <i class="fas fa-industry"></i> Asc. Agrop. Haras S/N, Huachipa, Lurigancho, Lima
+                    </p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 Grupo Antonio. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript para el carrusel -->
+    <script>
+        // Carrusel automático
+        let slideActual = 0;
+        const slides = document.querySelectorAll('.carrusel-item');
+        const indicadores = document.querySelectorAll('.indicador');
+        
+        function mostrarSlide(n) {
+            slides.forEach(slide => slide.classList.remove('activo'));
+            indicadores.forEach(indicador => indicador.classList.remove('activo'));
+            
+            slideActual = (n + slides.length) % slides.length;
+            
+            slides[slideActual].classList.add('activo');
+            indicadores[slideActual].classList.add('activo');
+        }
+        
+        function siguienteSlide() {
+            mostrarSlide(slideActual + 1);
+        }
+        
+        // Cambiar slide cada 4 segundos
+        setInterval(siguienteSlide, 4000);
+        
+        // Click en indicadores
+        indicadores.forEach((indicador, index) => {
+            indicador.addEventListener('click', () => {
+                mostrarSlide(index);
+            });
+        });
+    </script>
+    
+</body>
+</html>

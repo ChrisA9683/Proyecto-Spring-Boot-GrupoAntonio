@@ -1,0 +1,579 @@
+/* ============================================
+   VARIABLES CSS
+   ============================================ */
+
+:root {
+    /* Colores principales */
+    --color-rojo: #e63946;
+    --color-negro: #1a1a1a;
+    --color-blanco: #ffffff;
+    --color-gris-claro: #f8f9fa;
+    --color-gris-medio: #6c757d;
+    --color-gris-oscuro: #343a40;
+    
+    /* Sombras */
+    --sombra-suave: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --sombra-media: 0 8px 16px rgba(0, 0, 0, 0.15);
+    --sombra-fuerte: 0 12px 24px rgba(0, 0, 0, 0.2);
+    
+    /* Transiciones */
+    --transicion-rapida: all 0.3s ease;
+    --transicion-media: all 0.5s ease;
+}
+
+/* ============================================
+   RESET Y ESTILOS GENERALES
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.6;
+    color: var(--color-negro);
+    overflow-x: hidden;
+}
+
+.contenedor {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ============================================
+   ENCABEZADO Y NAVEGACIÓN
+   ============================================ */
+
+.encabezado {
+    background-color: var(--color-blanco);
+    box-shadow: var(--sombra-suave);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    animation: deslizarAbajo 0.5s ease;
+}
+
+@keyframes deslizarAbajo {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.navegacion {
+    max-width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1a1a1aee;
+    width: 100%;
+}
+
+/* Logo de Grupo Antonio */
+.logo {
+    background-color: var(--color-rojo);
+    padding: 20px 20px;
+    height: 120px; 
+    width: 330px;
+    border-top-right-radius: 55px;
+    border-bottom-right-radius: 55px;
+}
+
+.logo:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--sombra-media);
+}
+
+.logo-grupo {
+    color: var(--color-negro);
+    font-weight: 700;
+    font-size: 1.3rem;
+    position: relative;
+    top: -2px;
+    left: 20px;
+}
+
+.logo-antonio {
+    color: var(--color-blanco);
+    font-weight: 700;
+    position: relative;
+    top: -30px;
+    left: 30px;
+    font-size: 3rem;
+    justify-content: center;
+}
+
+/* Menú de navegación */
+.menu-navegacion {
+    display: flex;
+    list-style: none;
+    gap: 0px;
+}
+
+.menu-navegacion li a {
+    color: var(--color-blanco);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.3rem;
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: var(--transicion-rapida);
+    position: relative;
+}
+
+.menu-navegacion li a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background-color: var(--color-rojo);
+    transition: var(--transicion-rapida);
+    text-align: center;
+}
+
+.menu-navegacion li a:hover,
+.menu-navegacion li a.enlace-activo {
+    color: var(--color-rojo);
+}
+
+.menu-navegacion li a:hover::after,
+.menu-navegacion li a.enlace-activo::after {
+    width: 80%;
+}
+
+/* Iconos de usuario */
+.iconos-usuario {
+    display: flex;
+    gap: 20px;
+    position: relative;
+    right: 30px;
+}
+
+.icono-enlace {
+    color: var(--color-blanco);
+    font-size: 1.8rem;
+    transition: var(--transicion-rapida);
+    padding: 8px;
+}
+
+.icono-enlace:hover {
+    color: var(--color-rojo);
+    transform: scale(1.1);
+}
+
+/* Login box con borde rojo */
+.login-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 2px solid var(--color-rojo);
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: var(--transicion-rapida);
+    text-decoration: none;
+}
+
+.login-box:hover {
+    background-color: var(--color-rojo);
+    color: var(--color-blanco);
+    transform: scale(1.05);
+}
+
+.login-text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-blanco);
+}
+
+/* Botón menú móvil (oculto en desktop) */
+.boton-menu-movil {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--color-negro);
+    cursor: pointer;
+}
+
+/* ============================================
+   SECCIÓN DE BIENVENIDA
+   ============================================ */
+
+.seccion-bienvenida {
+    position: relative;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.contenedor-bienvenida {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-image: url('/imagenes/476178671_1131422328680481_1255960501018431618_n.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.overlay-bienvenida {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6));
+}
+
+.texto-bienvenida {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    text-align: center;
+    color: var(--color-blanco);
+    padding: 20px;
+    width: 100%;
+}
+
+.titulo-bienvenida {
+    font-size: 6.4rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+    position: relative;
+    text-transform: uppercase;
+}
+
+.titulo-fondo {
+    position: absolute;
+    top: 22%;
+    left: 52.3%;
+    transform: translateX(-55%);
+    font-size: 6.9rem;
+    font-weight: 900;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--color-rojo);
+    z-index: -1;
+    text-transform: uppercase;
+    opacity: 0.5;
+}
+
+.subtitulo-bienvenida {
+    font-size: 2.2rem;
+    font-weight: 700;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+    font-family: 'Poppins', sans-serif;
+    margin-bottom: 30px;
+}
+
+.boton-pedido {
+    padding: 18px 45px;
+    background: linear-gradient(135deg, var(--color-rojo) 0%, #c0392b 100%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.boton-pedido i {
+    font-size: 1.3rem;
+}
+
+.boton-pedido:hover {
+    background: linear-gradient(135deg, #c0392b 0%, var(--color-rojo) 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(231, 76, 60, 0.6);
+}
+
+.boton-pedido:active {
+    transform: translateY(-1px);
+}
+
+/* ============================================
+   SECCIÓN SERVICIOS
+   ============================================ */
+
+.seccion-servicios {
+    padding: 80px 0;
+    background-color: var(--color-blanco);
+}
+
+.titulo-servicios {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--color-negro);
+    margin-bottom: 60px;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.titulo-servicios::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--color-rojo) 0%, #c0392b 100%);
+    border-radius: 2px;
+}
+
+.grid-servicios {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 40px;
+    margin-top: 50px;
+}
+
+.servicio-item {
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.servicio-item:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.servicio-icono {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--color-rojo) 0%, #c0392b 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+}
+
+.servicio-icono i {
+    color: white;
+    font-size: 1.8rem;
+}
+
+.servicio-item img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.servicio-item:hover img {
+    transform: scale(1.08);
+}
+
+.servicio-contenido {
+    padding: 30px;
+    background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+}
+
+.servicio-titulo {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--color-negro);
+    margin-bottom: 15px;
+}
+
+.servicio-descripcion {
+    color: #6c757d;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+}
+
+.servicio-lista {
+    list-style: none;
+    padding: 0;
+}
+
+.servicio-lista li {
+    padding: 8px 0;
+    color: var(--color-gris-oscuro);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+}
+
+.servicio-lista li i {
+    color: var(--color-rojo);
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   PIE DE PÁGINA
+   ============================================ */
+
+.pie-pagina {
+    background-color: var(--color-negro);
+    color: var(--color-blanco);
+    padding: 50px 0 20px;
+}
+
+.contenido-footer {
+    display: grid;
+    grid-template-columns: 1.2fr auto 1fr 1fr 1.2fr;
+    gap: 40px;
+    margin-bottom: 30px;
+    align-items: start;
+}
+
+.separador-footer {
+    width: 2px;
+    background: linear-gradient(to bottom, transparent, var(--color-rojo), transparent);
+    height: 100%;
+    min-height: 150px;
+    margin: 0 10px;
+}
+
+.columna-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.columna-direcciones {
+    text-align: left;
+}
+
+.logo-footer {
+    background-color: var(--color-rojo);
+    padding: 20px 0px 0px 20px;
+    border-radius: 8px;
+    gap: 8px;
+    width: 310px;
+    position: relative;
+}
+
+.titulo-footer {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.texto-footer {
+    font-size: 0.95rem;
+    color: #b0b0b0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.redes-sociales {
+    display: flex;
+    gap: 15px;
+}
+
+.icono-red-social { 
+    text-decoration: none;
+    width: 40px;
+    height: 40px;
+    background-color: var(--color-gris-oscuro);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-blanco);
+    transition: var(--transicion-rapida);
+}
+
+.icono-red-social:hover {
+    background-color: var(--color-rojo);
+    transform: translateY(-3px);
+}
+
+.copyright {
+    text-align: center;
+    padding-top: 30px;
+    border-top: 1px solid #333;
+    color: #888;
+    font-size: 0.9rem;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 768px) {
+    .navegacion {
+        padding: 15px 20px;
+    }
+    
+    .menu-navegacion {
+        display: none;
+    }
+    
+    .boton-menu-movil {
+        display: block;
+    }
+    
+    .titulo-bienvenida {
+        font-size: 3.5rem;
+    }
+    
+    .titulo-fondo {
+        font-size: 4rem;
+    }
+    
+    .subtitulo-bienvenida {
+        font-size: 1.3rem;
+    }
+    
+    .boton-pedido {
+        padding: 14px 30px;
+        font-size: 1rem;
+    }
+    
+    .grid-servicios {
+        grid-template-columns: 1fr;
+    }
+    
+    .titulo-servicios {
+        font-size: 2rem;
+    }
+    
+    .contenido-footer {
+        grid-template-columns: 1fr;
+    }
+    
+    .separador-footer {
+        display: none;
+    }
+}

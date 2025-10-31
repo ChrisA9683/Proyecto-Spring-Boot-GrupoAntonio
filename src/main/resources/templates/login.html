@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Grupo Antonio</title>
+    
+    <!-- Fuente moderna de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Iconos de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Archivo CSS -->
+    <link rel="stylesheet" href="/css/loginEstilos.css">  <!-- Ruta correcta -->
+</head>
+<body>
+    <!-- Botón de volver -->
+    <a href="/" class="boton-volver">
+        <i class="fas fa-arrow-left"></i>
+        <span>Volver</span>
+    </a>
+    
+    <div class="contenedor-login">
+        <!-- Logo de Grupo Antonio -->
+        <div class="logo-login">
+            <span class="logo-grupo">GRUPO</span><br>
+            <span class="logo-antonio">ANTONIO</span>
+        </div>
+        
+        <!-- Formulario de Login -->
+        <div class="formulario-login">
+            <h2 class="titulo-login">Iniciar Sesión</h2>
+            
+            <form th:action="@{/usuario/login}" method="post">
+    <div class="campo-input">
+        <i class="fas fa-user"></i>
+        <input type="email" id="username" name="email" placeholder="Correo Electrónico" required>
+    </div>
+    <div class="campo-input">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="password" name="password" placeholder="Contraseña" required>
+    </div>
+    <button type="submit" class="boton-login">Iniciar sesión</button>
+
+    <!-- Mostrar mensaje de error si lo hay -->
+    <p th:if="${param.error}" style="color: red; text-align: center;">Usuario o contraseña incorrectos</p>
+    <p th:if="${param.logout}" style="color: green; text-align: center;">Has cerrado sesión correctamente</p>
+</form>
+
+            <div class="enlaces-login">
+                <p class="enlace-izquierda">¿No tienes cuenta?</p>
+                <a href="/usuario/registro" class="enlace-derecha">Registrarte</a>  <!-- Ruta correcta a registro -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>

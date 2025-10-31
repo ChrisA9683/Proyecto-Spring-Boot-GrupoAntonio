@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Grupo Antonio</title>
+    
+    <!-- Fuente moderna de Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Iconos de Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Archivo CSS del Dashboard -->
+    <link rel="stylesheet" href="/css/inicio-dashboardEstilos.css">
+</head>
+<body>
+    
+    
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <span class="logo-grupo">GRUPO</span>
+                <span class="logo-antonio">ANTONIO</span>
+            </div>
+            <button class="toggle-sidebar" id="toggleSidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Pedidos</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-users"></i>
+                <span>Usuarios</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-box"></i>
+                <span>Productos</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-truck"></i>
+                <span>Proveedor</span>
+            </a>
+            <br>
+            <br>
+            <br>    
+            <br>
+            <div class="nav-spacer"></div>
+            <a href="#" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Configuraciones</span>
+            </a>
+            <a href="index.html" class="nav-item">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Salir</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <div class="sidebar-user-box">
+                <h4 class="sidebar-user-name">Jian Pier S. H. A</h4>
+                <p class="sidebar-user-status">
+                    <span class="status-dot"></span>
+                    Online
+                </p>
+            </div>
+        </div>
+    </aside>
+    
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-content">
+        <div class="welcome-message">
+        <div class="user-section">
+            <img src="/imagenes/bandejas.jpg" alt="Usuario" class="user-avatar">
+            <h2>Bienvenido, <span th:text="${nombreUsuario}">Usuario</span></h2>
+        </div>
+        <div class="search-container">
+            <input type="text" placeholder="Buscar..." class="search-bar">
+            <button class="search-button">🔍</button>
+        </div>
+    </div>
+        
+        <!-- TARJETAS DE ESTADÍSTICAS -->
+        <section class="stats-section">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="stat-info">
+                    <p class="stat-label">Total de pedidos</p>
+                    <h3 class="stat-value">50</h3>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <p class="stat-label">Pedidos Pendientes</p>
+                    <h3 class="stat-value">12</h3>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="stat-info">
+                    <p class="stat-label">Total de ganancias</p>
+                    <h3 class="stat-value">1000,00</h3>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-info">
+                    <p class="stat-label">Total de clientes</p>
+                    <h3 class="stat-value">20</h3>
+                </div>
+            </div>
+            
+            <button class="stat-card-actualizar" >
+                <div class="stat-icon">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+                <div class="stat-info">
+                    <p class="stat-label">Actualizar</p>
+                    <h3 class="stat-value">10</h3>
+                </div>
+            </button>
+        </section>
+        
+        <!-- TABLA DE PEDIDOS PENDIENTES -->
+        <section class="orders-section">
+            <h2 class="section-title">PEDIDOS PENDIENTES</h2>
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Pedido ID</th>
+                                    <th>Cliente ID</th>
+                                    <th>Fecha de pedido</th>
+                                    <th>Fecha de entrega</th>
+                                    <th>Método de pago</th>
+                                    <th>Monto</th>
+                                    <th>Estado</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#001</td>
+                                    <td>C-1234</td>
+                                    <td>10/01/2025</td>
+                                    <td>15/01/2025</td>
+                                    <td>Tarjeta de Crédito</td>
+                                    <td>S/ 1,250.00</td>
+                                    <td>
+                                        <span class="status-pending">
+                                            <span class="status-dot-red"></span>
+                                            Pendiente
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="btn-edit">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#002</td>
+                                    <td>C-5678</td>
+                                    <td>10/02/2025</td>
+                                    <td>16/02/2025</td>
+                                    <td>Transferencia</td>
+                                    <td>S/ 850.00</td>
+                                    <td>
+                                        <span class="status-pending">
+                                            <span class="status-dot-red"></span>
+                                            Pendiente
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="btn-edit">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#003</td>
+                                    <td>C-9012</td>
+                                    <td>10/03/2025</td>
+                                    <td>17/03/2025</td>
+                                    <td>Efectivo</td>
+                                    <td>S/ 2,100.00</td>
+                                    <td>
+                                        <span class="status-pending">
+                                            <span class="status-dot-red"></span>
+                                            Pendiente
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="btn-edit">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#004</td>
+                                    <td>C-3456</td>
+                                    <td>10/04/2025</td>
+                                    <td>18/04/2025</td>
+                                    <td>Tarjeta de Débito</td>
+                                    <td>S/ 675.00</td>
+                                    <td>
+                                        <span class="status-pending">
+                                            <span class="status-dot-red"></span>
+                                            Pendiente
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="btn-edit">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#005</td>
+                                    <td>C-7890</td>
+                                    <td>10/05/2025</td>
+                                    <td>19/05/2025</td>
+                                    <td>Transferencia</td>
+                                    <td>S/ 1,450.00</td>
+                                    <td>
+                                        <span class="status-pending">
+                                            <span class="status-dot-red"></span>
+                                            Pendiente
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="btn-edit">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#006</td>
+                                    <td>C-2345</td>
+                                    <td>10/06/2025</td>
+                                    <td>20/06/2025</td>
+                                    <td>Tarjeta de Crédito</td>
+                                    <td>S/ 920.00</td>
+                                    <td>
+                                        <span class="status-pending">
+                                            <span class="status-dot-red"></span>
+                                            Pendiente
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="btn-edit">
+                                            <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+    
+    <script>
+        // Toggle Sidebar
+        const toggleSidebar = document.getElementById('toggleSidebar');
+        const sidebar = document.getElementById('sidebar');
+        
+        toggleSidebar.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+        });
+    </script>
+    
+</body>
+</html>
