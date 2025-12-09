@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos - Grupo Antonio</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/inicio-dashboardEstilos.css}"> 
+    
+    <style>
+        /* Mejora del efecto hover existente: Añadir un brillo suave */
+.boton-perfil-rojo:hover {
+    background-color: #b71c1c; /* Color más oscuro */
+    transform: translateY(-2px); /* Eleva el botón ligeramente */
+    
+    /* Efecto de sombra roja sutil (el "Glow") */
+    box-shadow: 0 8px 15px rgba(211, 47, 47, 0.5); 
+    
+    /* Añadir transición para que el cambio de sombra sea suave */
+    transition: all 0.3s ease;
+}
+        /* Estilos Específicos para Pedidos */
+        
+        /* Badges de Estado */
+        .status-badge { padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; display: inline-block; }
+        .status-pendiente { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
+        .status-pagado { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; }
+        .status-vendido { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; } /* Mismo que pagado */
+        .status-enviado { background: #eff6ff; color: #1d4ed8; border: 1px solid #dbeafe; }
+
+        /* Modal Detalle Grande */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; pointer-events: none; transition: 0.3s; }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+
+        .modal-content-large {
+            background: white; width: 800px; max-width: 95%; max-height: 90vh;
+            border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            display: flex; flex-direction: column; overflow: hidden;
+            transform: translateY(20px); transition: 0.3s;
+        }
+        .modal-overlay.active .modal-content-large { transform: translateY(0); }
+
+        .modal-header { padding: 20px 30px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; background: #f9f9f9; }
+        .modal-title { margin: 0; color: #333; font-size: 1.2rem; font-weight: 700; }
+        .btn-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #999; }
+
+        .modal-body { padding: 30px; overflow-y: auto; }
+
+        /* Grid Info Cliente/Pedido */
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px; }
+        .info-box h4 { font-size: 0.85rem; color: #888; text-transform: uppercase; margin-bottom: 15px; border-bottom: 2px solid #e60000; display: inline-block; padding-bottom: 5px; font-weight: 700; }
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; border-bottom: 1px dashed #f0f0f0; padding-bottom: 5px; }
+        .info-row label { color: #666; font-weight: 500; }
+        .info-row span { color: #333; font-weight: 600; text-align: right; }
+
+        /* Tabla Productos Modal */
+        .modal-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .modal-table th { text-align: left; padding: 10px; background: #f1f1f1; color: #555; font-size: 0.85rem; font-weight: 600; }
+        .modal-table td { padding: 12px 10px; border-bottom: 1px solid #eee; font-size: 0.9rem; color: #333; }
+        .modal-product-img { width: 40px; height: 40px; object-fit: contain; border: 1px solid #eee; border-radius: 6px; margin-right: 10px; vertical-align: middle; background: white; }
+        
+        /* Footer Totales */
+        .modal-footer { padding: 20px 30px; background: #fdfdfd; border-top: 1px solid #eee; text-align: right; }
+        .total-line { display: flex; justify-content: flex-end; gap: 20px; font-size: 1.2rem; color: #333; font-weight: 700; }
+        .total-line span.amount { color: #e60000; }
+
+        /* Botón Ver Detalle */
+        .btn-detalle {
+            background: white; border: 1px solid #ddd; color: #555;
+            padding: 6px 15px; border-radius: 6px; cursor: pointer;
+            font-size: 0.85rem; font-weight: 500; transition: 0.2s;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-detalle:hover { border-color: #e60000; color: #e60000; background: #fff5f5; }
+        
+        @media (max-width: 768px) { .info-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <div class="modal-overlay" id="detalleModal">
+        <div class="modal-content-large">
+            <div class="modal-header">
+                <h3 class="modal-title">Orden #<span id="modalId">000</span></h3>
+                <button class="btn-close" onclick="cerrarModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                
+                <div class="info-grid">
+                    <div class="info-box">
+                        <h4>Datos de Envío</h4>
+                        <div class="info-row"><label>Receptor:</label> <span id="cliNombre">-</span></div>
+                        <div class="info-row"><label>Email:</label> <span id="cliEmail">-</span></div>
+                        <div class="info-row"><label>Teléfono:</label> <span id="cliTelefono">-</span></div>
+                        
+                        <div class="info-row"><label>Departamento:</label> <span id="cliDepartamento">-</span></div>
+                        <div class="info-row"><label>Ciudad:</label> <span id="cliCiudad">-</span></div>
+                        <div class="info-row"><label>Distrito:</label> <span id="cliDistrito">-</span></div>
+                        <div class="info-row"><label>Calle:</label> <span id="cliCalle">-</span></div>
+                        <div class="info-row"><label>Referencia:</label> <span id="cliReferencia">-</span></div>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>Detalles Orden</h4>
+                        <div class="info-row"><label>Fecha:</label> <span id="pedFecha">-</span></div>
+                        <div class="info-row"><label>Estado:</label> <span id="pedEstado">-</span></div>
+                        <div class="info-row"><label>Método Pago:</label> <span id="pedPago">-</span></div>
+                        <div class="info-row"><label>Envío:</label> <span id="pedEnvio">-</span></div>
+                    </div>
+                </div>
+
+                <h4 style="color:#888; font-size:0.9rem; font-weight:700; margin-bottom:10px; border-bottom: 2px solid #e60000; display:inline-block;">Productos</h4>
+                <table class="modal-table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th style="text-align: center;">Cant.</th>
+                            <th style="text-align: right;">Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaProductosBody">
+                        </tbody>
+                </table>
+
+            </div>
+            <div class="modal-footer">
+                <div class="total-line">
+                    TOTAL: <span class="amount" id="pedTotal">S/ 0.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+ <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+<div class="logo">
+    <a href="/" style="text-decoration: none; color: inherit;"> 
+        <span class="logo-grupo">GRUPO</span>
+        <span class="logo-antonio">ANTONIO</span>
+    </a>
+</div>            <button class="toggle-sidebar" id="toggleSidebar"><i class="fas fa-bars"></i></button>
+        </div>
+       <nav class="sidebar-nav">
+
+    <div th:if="${rolUsuario == 'ADMIN'}">
+        <p class="menu-label">Administración</p>
+        
+        <a href="/usuario/dashboard" class="nav-item" 
+           th:classappend="${activePage == 'dashboard'} ? 'active'">
+           <i class="fas fa-chart-line"></i><span>Dashboard</span>
+        </a>
+
+        <a href="/usuario/panel_usuario" class="nav-item" 
+           th:classappend="${activePage == 'usuarios'} ? 'active'">
+           <i class="fas fa-users-cog"></i><span>Usuarios</span>
+        </a>
+
+        <a href="/usuario/panel_productos" class="nav-item" 
+           th:classappend="${activePage == 'productos'} ? 'active'">
+           <i class="fas fa-box"></i><span>Productos</span>
+        </a>
+    </div>
+
+    <div th:if="${rolUsuario == 'ADMIN' or rolUsuario == 'VENDEDOR'}">
+        <p class="menu-label" th:if="${rolUsuario == 'VENDEDOR'}">Área de Ventas</p>
+
+        <a href="/usuario/pedidos" class="nav-item" 
+           th:classappend="${activePage == 'pedidos'} ? 'active'">
+           <i class="fas fa-shopping-cart"></i><span>Pedidos</span>
+        </a>
+    </div>
+
+    <div th:if="${rolUsuario == 'ADMIN' or rolUsuario == 'USUARIO' or rolUsuario == 'USER'}">
+        <p class="menu-label" th:if="${rolUsuario != 'ADMIN'}">Mi Cuenta</p>
+        
+        <a href="/usuario/seguimiento" class="nav-item" 
+           th:classappend="${activePage == 'seguimiento'} ? 'active'">
+           <i class="fas fa-truck"></i><span>Mis Pedidos</span>
+        </a>
+
+        <a href="/" class="nav-item" th:if="${rolUsuario != 'ADMIN'}">
+            <i class="fas fa-store"></i><span>Ir a Tienda</span>
+        </a>
+    </div>
+
+    <div class="nav-spacer"></div>
+    
+    <a href="/usuario/logout" class="nav-item">
+        <i class="fas fa-sign-out-alt"></i><span>Cerrar Sesión</span>
+    </a>
+
+</nav>
+        <div class="sidebar-footer">
+            <div class="sidebar-user-box">
+                <h4 class="sidebar-user-name" th:text="${nombreUsuario}">Usuario</h4>
+                <p class="sidebar-user-status"><span class="status-dot"></span> Online</p>
+            </div>
+        </div>
+    </aside>
+
+
+    <main class="main-content">
+        <div class="welcome-message" style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+            <div class="user-section">
+                <h2 style="margin: 0; font-size: 1.5rem; color: #333;">
+                    Historial de Pedidos <span style="font-size: 0.7em; background: #eee; padding: 2px 10px; border-radius: 20px; vertical-align: middle; margin-left: 10px;"><i class="fas fa-shopping-bag"></i> <span th:text="${totalPedidos}">0</span></span>
+                </h2>
+            </div>
+            <div class="search-container" style="width: 300px; position: relative;">
+                <input type="text" id="buscadorInput" placeholder="Buscar pedido..." class="search-bar">
+                <i class="fas fa-search" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #999;"></i>
+            </div>
+        </div>
+
+        <div class="table-card" style="background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); padding: 25px; overflow: hidden;">
+            <div class="table-container">
+                <table class="data-table" id="tablaPedidos" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid #f0f0f0;">
+                            <th style="padding: 15px; text-align: left;">ID</th>
+                            <th style="padding: 15px; text-align: left;">Fecha</th>
+                            <th style="padding: 15px; text-align: left;">Cliente</th>
+                            <th style="padding: 15px; text-align: left;">Total</th>
+                            <th style="padding: 15px; text-align: center;">Estado</th>
+                            <th style="padding: 15px; text-align: center;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="p : ${listaPedidos}" style="border-bottom: 1px solid #f9f9f9;">
+                            <td class="col-id" style="padding: 15px; font-weight: 700;" th:text="'#' + ${p.id}">#1001</td>
+                            <td style="padding: 15px; color: #666;" th:text="${#temporals.format(p.fechaCreacion, 'dd/MM/yyyy HH:mm')}">Fecha</td>
+                            <td style="padding: 15px; font-weight: 500;" th:text="${p.usuario.nombre}">Cliente</td>
+                            <td style="padding: 15px; font-weight: 600; color: #333;" th:text="'S/ ' + ${#numbers.formatDecimal(p.total, 1, 2)}">S/ 0.00</td>
+                            <td style="padding: 15px; text-align: center;">
+                                <span class="status-badge" th:classappend="${'status-' + #strings.toLowerCase(p.estado)}" th:text="${p.estado}">Estado</span>
+                            </td>
+                            <td style="padding: 15px; text-align: center;">
+                                <button class="btn-detalle" th:onclick="'abrirDetalle(' + ${p.id} + ')'">
+                                    <i class="fas fa-eye"></i> Ver Detalle
+                                </button>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(listaPedidos)}">
+                            <td colspan="6" style="text-align: center; padding: 40px; color: #999;">No hay pedidos registrados.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const toggleBtn = document.getElementById('toggleSidebar');
+        const sidebar = document.getElementById('sidebar');
+        if(toggleBtn) toggleBtn.addEventListener('click', () => sidebar.classList.toggle('collapsed'));
+
+        // --- MODAL DETALLE ---
+        const modal = document.getElementById('detalleModal');
+        const tbody = document.getElementById('tablaProductosBody');
+
+        function abrirDetalle(id) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px;">Cargando datos...</td></tr>';
+            modal.classList.add('active');
+
+            fetch(`/usuario/pedido/detalle/${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    // Cabecera
+                    document.getElementById('modalId').innerText = data.id;
+                    document.getElementById('pedFecha').innerText = new Date(data.fecha).toLocaleString();
+                    document.getElementById('pedEstado').innerText = data.estado;
+                    document.getElementById('pedPago').innerText = data.metodoPago;
+                    document.getElementById('pedEnvio').innerText = 'S/ ' + (data.envio ? data.envio.toFixed(2) : '0.00');
+                    document.getElementById('pedTotal').innerText = 'S/ ' + data.total.toFixed(2);
+
+                    // Cliente y Dirección Detallada
+                    if(data.cliente) {
+                        document.getElementById('cliNombre').innerText = data.cliente.nombre || '-';
+                        document.getElementById('cliEmail').innerText = data.cliente.email || '-';
+                        document.getElementById('cliTelefono').innerText = data.cliente.telefono || '-';
+                        
+                        // NUEVOS CAMPOS DE DIRECCIÓN
+                        document.getElementById('cliDepartamento').innerText = data.cliente.departamento || '-';
+                        document.getElementById('cliCiudad').innerText = data.cliente.ciudad || '-';
+                        document.getElementById('cliDistrito').innerText = data.cliente.distrito || '-';
+                        document.getElementById('cliCalle').innerText = data.cliente.calle || '-';
+                        document.getElementById('cliReferencia').innerText = data.cliente.referencia || '-';
+                    }
+
+                    // Productos
+                    tbody.innerHTML = '';
+                    if (data.productos && data.productos.length > 0) {
+                        data.productos.forEach(p => {
+                            tbody.innerHTML += `
+                                <tr>
+                                    <td style="display:flex; align-items:center;">
+                                        <img src="${p.imagen}" class="modal-product-img" onerror="this.src='https://via.placeholder.com/40'">
+                                        <span>${p.nombre}</span>
+                                    </td>
+                                    <td>S/ ${p.precio.toFixed(2)}</td>
+                                    <td style="text-align:center;">${p.cantidad}</td>
+                                    <td style="text-align:right; font-weight:600;">S/ ${p.subtotal.toFixed(2)}</td>
+                                </tr>
+                            `;
+                        });
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Sin productos.</td></tr>';
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Error al cargar.</td></tr>';
+                });
+        }
+
+        function cerrarModal() { modal.classList.remove('active'); }
+
+        // Buscador
+        document.getElementById('buscadorInput').addEventListener('keyup', function() {
+            const val = this.value.toLowerCase();
+            document.querySelectorAll('#tablaPedidos tbody tr').forEach(f => {
+                if(f.innerText.toLowerCase().includes(val)) f.style.display = ''; else f.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+</html>
