@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2/2 Checkout: Método de Pago</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* CSS OMITIDO POR BREVEDAD - Se asume que los estilos están correctos */
+        :root {
+            --color-principal: #e63946; --color-fondo: #2c3e50; --color-card-bg: #ffffff; --color-texto: #333;
+            --color-texto-claro: #f0f0f0; --sombra-card: 0 4px 12px rgba(0, 0, 0, 0.2); --color-success: #28a745;
+            --color-secundario: #95a5a6; 
+        }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--color-fondo); color: var(--color-texto); margin: 0; padding: 20px; }
+        .checkout-container { max-width: 950px; margin: 50px auto; display: grid; grid-template-columns: 2fr 1fr; gap: 40px; background-color: transparent; }
+        h1 { color: var(--color-principal); font-size: 2em; font-weight: 700; margin-bottom: 30px; grid-column: 1 / -1; border-bottom: 2px solid var(--color-principal); padding-bottom: 10px; color: var(--color-texto-claro); }
+        .form-section { background: var(--color-card-bg); padding: 30px; border-radius: 12px; box-shadow: var(--sombra-card); }
+        h2 { font-size: 1.5em; color: var(--color-principal); margin-bottom: 20px; border-left: 4px solid var(--color-principal); padding-left: 10px; }
+        
+        /* Estilos de Métodos de Pago */
+        .payment-option { border: 2px solid #ddd; border-radius: 8px; padding: 15px; margin-bottom: 15px; cursor: pointer; transition: all 0.2s; }
+        .payment-option:hover, input[type="radio"]:checked + label .payment-option { border-color: var(--color-principal); background-color: #fffafa; }
+        .payment-option h4 { margin: 0 0 5px 0; font-size: 1.1em; display: flex; align-items: center; gap: 10px; color: var(--color-principal); font-weight: 600; }
+        .payment-option p { font-size: 0.9em; color: #666; margin: 0; }
+        .radio-hidden { display: none; }
+        
+        /* Contenedores de Formulario Ocultos */
+        #card-form-container, #transfer-form-container, #yape-qr-container { border-top: 1px dashed #ccc; padding-top: 20px; margin-top: 15px; display: none; }
+        .form-group input { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 1em; }
+        .grid-half { display: grid; grid-template-columns: 2fr 1fr; gap: 15px; }
+
+        /* Estilos específicos para Yape QR */
+        .yape-details { display: flex; align-items: center; gap: 20px; background: #e8f8ff; padding: 15px; border-radius: 8px; border: 1px solid #007bff; }
+        .yape-details img { width: 120px; height: 120px; border: 1px solid #007bff; border-radius: 4px; }
+        .yape-info strong { display: block; font-size: 1.1em; color: #007bff; margin-bottom: 5px; }
+        .yape-info span { font-size: 1.5em; font-weight: 700; color: #333; }
+        
+        /* Botón Final */
+        .btn-confirmar { background-color: var(--color-success); color: white; padding: 15px 25px; border: none; border-radius: 6px; cursor: pointer; font-size: 1.2em; font-weight: 700; transition: background-color 0.3s; width: 100%; margin-top: 30px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .btn-confirmar:hover { background-color: #218838; }
+
+        /* --- RESUMEN LATERAL --- */
+        .resumen-sidebar { background-color: #34495e; padding: 25px; border-radius: 12px; height: fit-content; box-shadow: var(--sombra-card); }
+        .resumen-sidebar h3 { border-bottom: 2px solid #5d6d7e; padding-bottom: 10px; margin-top: 0; color: var(--color-texto-claro); }
+        .resumen-line { display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.95em; color: var(--color-secundario); }
+        .resumen-line.total { font-weight: 700; font-size: 1.1em; margin-top: 15px; border-top: 1px solid #5d6d7e; padding-top: 10px; color: var(--color-texto-claro); }
+        .resumen-line.total span:last-child { color: #f1c40f; }
+
+        /* --- MODAL DE CONFIRMACIÓN --- */
+        .modal-backdrop { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); }
+        .modal-content { background-color: #2c3e50; color: white; margin: 10% auto; padding: 30px; border-radius: 12px; width: 80%; max-width: 450px; box-shadow: 0 5px 25px rgba(0, 0, 0, 0.8); }
+        .modal-content h3 { color: #ecf0f1; border-bottom: 2px solid #4a6681; }
+        .modal-content p { color: #bdc3c7; }
+        .btn-modal-cancel { background-color: #e74c3c; }
+        .btn-modal-confirm { background-color: #3498db; }
+    </style>
+</head>
+<body>
+    <div class="checkout-container">
+        <h1><i class="fas fa-credit-card"></i> Pago y Finalización de Orden</h1>
+
+        <div class="form-section">
+            <form th:action="@{/checkout/confirmar-orden}" method="POST" id="payment-form">
+                <h2>1. Selecciona Método de Pago</h2>
+
+                <input type="radio" id="pago-tarjeta" name="metodoPago" value="TARJETA" class="radio-hidden" checked>
+                <label for="pago-tarjeta">
+                    <div class="payment-option">
+                        <h4><i class="fab fa-cc-visa"></i> Tarjeta de Crédito/Débito (VISA, Mastercard)</h4>
+                        <p>Pago inmediato y seguro.</p>
+                    </div>
+                </label>
+                
+                <div id="card-form-container" style="display: block;">
+                    <div class="form-group"><label for="num-tarjeta">Número de Tarjeta</label><input type="text" id="num-tarjeta" name="numTarjeta" placeholder="XXXX XXXX XXXX XXXX"></div>
+                    <div class="grid-half">
+                        <div class="form-group"><label for="vencimiento">Fecha de Vencimiento (MM/AA)</label><input type="text" id="vencimiento" name="vencimiento" placeholder="MM/AA"></div>
+                        <div class="form-group"><label for="cvv">CVV</label><input type="text" id="cvv" name="cvv" placeholder="123"></div>
+                    </div>
+                    <div class="form-group"><label for="nombre-tarjeta">Nombre en la Tarjeta</label><input type="text" id="nombre-tarjeta" name="nombreTarjeta"></div>
+                </div>
+
+                <hr style="margin: 20px 0; border-color: #eee;">
+
+                <input type="radio" id="pago-yape" name="metodoPago" value="YAPE" class="radio-hidden">
+                <label for="pago-yape">
+                    <div class="payment-option">
+                        <h4><i class="fas fa-mobile-alt"></i> Billetera Digital (Yape / Plin)</h4>
+                        <p>Transferencia rápida mediante QR o número de celular.</p>
+                    </div>
+                </label>
+                
+                <div id="yape-qr-container">
+                    <h3>Detalles de Pago Yape</h3>
+                    <div class="yape-details">
+                        <img src="/images/qr-yape-placeholder.png" alt="Código QR Yape">
+                        <div class="yape-info">
+                            <p><strong>Total a Pagar:</strong> <span th:text="${'S/ ' + #numbers.formatDecimal(checkoutData.total, 1, 2)}">S/ 4,770.00</span></p>
+                            <p><strong>Nro. Celular:</strong> <span>927 600 289</span></p>
+                            <p class="text-muted" style="margin-top: 10px; font-size: 0.9em;">Escanea el código o transfiere al número.</p>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label for="referencia-yape">Nro. Operación de Pago o Voucher (Obligatorio)</label>
+                        <input type="text" id="referencia-yape" name="referenciaExterna" placeholder="Ingresa aquí el Nro. Operación (Ej: NOP-0123)">
+                    </div>
+                </div>
+                
+                <hr style="margin: 20px 0; border-color: #eee;">
+
+                <input type="radio" id="pago-transferencia" name="metodoPago" value="TRANSFERENCIA" class="radio-hidden">
+                <label for="pago-transferencia">
+                    <div class="payment-option">
+                        <h4><i class="fas fa-university"></i> Transferencia Bancaria Directa (BCP/Interbank)</h4>
+                        <p>Pago manual para grandes montos. La orden se marca como Pendiente.</p>
+                    </div>
+                </label>
+                
+                <div id="transfer-form-container">
+                    <p class="text-info">Al confirmar, la orden se crea como **"PENDIENTE DE PAGO"**. Recibirás los datos bancarios en el correo.</p>
+                    <div class="form-group">
+                        <label for="referencia-transf">Nro. de Operación / Código de Voucher</label>
+                        <input type="text" id="referencia-transf" name="referenciaExterna" placeholder="Código de transferencia o depósito (Opcional)">
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn-confirmar" id="btn-confirmar-orden">
+                    <i class="fas fa-lock"></i> Finalizar Pedido y Pagar <span th:text="${'S/ ' + #numbers.formatDecimal(checkoutData.total, 1, 2)}">S/ 4,770.00</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="resumen-sidebar">
+            <h3>Resumen de la Compra</h3>
+            <div class="resumen-line"><span>Subtotal Productos:</span><span th:text="${'S/ ' + #numbers.formatDecimal(checkoutData.subtotal, 1, 2)}">S/ 4,000.00</span></div>
+            <div class="resumen-line"><span>Costo de Envío:</span><span th:text="${'S/ ' + #numbers.formatDecimal(checkoutData.costoEnvio, 1, 2)}">S/ 50.00</span></div>
+            <div class="resumen-line"><span>IGV (18%):</span><span th:text="${'S/ ' + #numbers.formatDecimal(checkoutData.total - checkoutData.subtotal - checkoutData.costoEnvio, 1, 2)}">S/ 720.00</span></div>
+            <div class="resumen-line total"><span>Total a Pagar:</span><span th:text="${'S/ ' + #numbers.formatDecimal(checkoutData.total, 1, 2)}">S/ 4,770.00</span></div>
+        </div>
+    </div>
+    
+    <div id="confirmation-modal" class="modal-backdrop">
+        <div class="modal-content">
+            <h3>Confirmar Pago Manual</h3>
+            <p>Estás a punto de finalizar tu pedido. El sistema lo registrará como **PENDIENTE** hasta que verifiquemos tu transferencia.</p>
+            <div class="modal-actions">
+                <button type="button" class="btn-modal-cancel" id="btn-cancel-modal">Revisar Datos</button>
+                <button type="button" class="btn-modal-confirm" id="btn-confirm-submit">Confirmar y Crear Orden</button>
+            </div>
+        </div>
+    </div>
+    
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('payment-form');
+    const btnConfirmar = document.getElementById('btn-confirmar-orden');
+    const modal = document.getElementById('confirmation-modal');
+    const btnConfirmSubmit = document.getElementById('btn-confirm-submit');
+    const btnCancelModal = document.getElementById('btn-cancel-modal');
+    const radioTarjeta = document.getElementById('pago-tarjeta');
+    const radioYape = document.getElementById('pago-yape');
+    const radioTransferencia = document.getElementById('pago-transferencia');
+    const cardFormContainer = document.getElementById('card-form-container');
+    const yapeQrContainer = document.getElementById('yape-qr-container');
+    const transferFormContainer = document.getElementById('transfer-form-container');
+    
+    // Contenedor para mostrar mensajes de error
+    const errorDisplay = document.createElement('div');
+    errorDisplay.style.color = '#e74c3c';
+    errorDisplay.style.fontWeight = 'bold';
+    errorDisplay.style.marginTop = '15px';
+    form.insertBefore(errorDisplay, btnConfirmar);
+
+    function displayError(message) {
+        errorDisplay.textContent = message;
+        errorDisplay.style.display = 'block';
+    }
+
+    function clearError() {
+        errorDisplay.textContent = '';
+        errorDisplay.style.display = 'none';
+    }
+
+    // --- LÓGICA DE VALIDACIÓN DEL FORMULARIO ---
+    function validateForm() {
+        clearError();
+        const metodo = form.metodoPago.value;
+        
+        if (metodo === 'TARJETA') {
+            const numTarjeta = document.getElementById('num-tarjeta').value.trim();
+            const vencimiento = document.getElementById('vencimiento').value.trim();
+            const cvv = document.getElementById('cvv').value.trim();
+
+            if (!numTarjeta || !vencimiento || !cvv) {
+                displayError('Por favor, completa todos los campos de la tarjeta.');
+                return false;
+            }
+            // Agregar validaciones de formato (ej: 16 dígitos, MM/AA, 3 dígitos CVV) si es necesario.
+        } else if (metodo === 'YAPE') {
+            const referenciaYape = document.getElementById('referencia-yape').value.trim();
+            if (!referenciaYape) {
+                displayError('Debe ingresar el Nro. de Operación de Yape/Plin para confirmar su pago.');
+                return false;
+            }
+        }
+        // En TRANSFERENCIA la referencia es opcional.
+        return true;
+    }
+
+    // Función para mostrar el formulario correspondiente
+    function togglePaymentForms() {
+        cardFormContainer.style.display = 'none';
+        yapeQrContainer.style.display = 'none';
+        transferFormContainer.style.display = 'none';
+        clearError(); // Limpiar errores al cambiar de método
+        
+        // El atributo 'required' se maneja mejor con validación JS
+        const referenciaYapeInput = document.getElementById('referencia-yape');
+        referenciaYapeInput.required = false;
+
+        if (radioTarjeta.checked) {
+            cardFormContainer.style.display = 'block';
+        } else if (radioYape.checked) {
+            yapeQrContainer.style.display = 'block';
+            referenciaYapeInput.required = true;
+        } else if (radioTransferencia.checked) {
+            transferFormContainer.style.display = 'block';
+        }
+    }
+
+    // Lógica de disparo del modal y validación
+    btnConfirmar.addEventListener('click', function(e) {
+        e.preventDefault(); 
+        
+        // 1. Validar antes de hacer cualquier cosa
+        if (!validateForm()) {
+            return; 
+        }
+
+        btnConfirmar.disabled = true; 
+        let metodo = form.metodoPago.value;
+
+        if (metodo === 'TARJETA') {
+            submitFormWithAJAX();
+        } else if (metodo === 'YAPE' || metodo === 'TRANSFERENCIA') {
+            modal.style.display = 'flex'; // Mostrar el modal
+            // El botón se re-habilita si se cancela o después de submitFormWithAJAX
+        }
+    });
+
+    // Lógica para confirmar y enviar el formulario después de la confirmación en el modal
+    btnConfirmSubmit.addEventListener('click', function() {
+        modal.style.display = 'none';
+        submitFormWithAJAX(); 
+    });
+
+    // Lógica para cancelar y cerrar el modal
+    btnCancelModal.addEventListener('click', function() {
+        modal.style.display = 'none';
+        btnConfirmar.disabled = false; // Habilita nuevamente el botón si se cancela
+        clearError();
+    });
+
+    // Inicialización de los listeners de los radios
+    radioTarjeta.addEventListener('change', togglePaymentForms);
+    radioYape.addEventListener('change', togglePaymentForms);
+    radioTransferencia.addEventListener('change', togglePaymentForms);
+    togglePaymentForms();
+
+    // --- FUNCIÓN MEJORADA PARA ENVÍO AJAX ---
+    function submitFormWithAJAX() {
+        const formData = new FormData(form);
+        
+        fetch(form.action, { 
+            method: 'POST', 
+            body: formData,
+            headers: { 'Accept': 'application/json' } // Informa al servidor que esperamos JSON
+        })
+        .then(response => {
+            // Manejar errores HTTP (ej: 400, 500)
+            if (!response.ok) {
+                // Si la respuesta no es 'ok', intentamos obtener el JSON para más detalles
+                return response.json().then(errorData => {
+                    throw new Error(errorData.error || 'Error en el servidor (' + response.status + ').');
+                }).catch(() => {
+                    // Si falla al parsear el JSON (ej: el servidor devuelve HTML de error 500)
+                    throw new Error('Error en la comunicación con el servidor. Código: ' + response.status);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                // ÉXITO: Redirigir
+                window.location.href = '/checkout/exito?pedidoId=' + data.pedidoId;
+            } else {
+                // Fallo lógico (ej: tarjeta rechazada)
+                displayError('ERROR DE PAGO: ' + data.error);
+                btnConfirmar.disabled = false; 
+            }
+        })
+        .catch(error => {
+            // Fallo de red, fallo al parsear JSON, o error lanzado por response.ok
+            console.error('Error al procesar el pago:', error);
+            displayError('Error grave al procesar el pago. Por favor, inténtelo de nuevo. Detalle: ' + error.message);
+            btnConfirmar.disabled = false; // Habilita el botón para que el usuario pueda intentar de nuevo
+        });
+    }
+});
+</script>
+
+</body>
+</html>
