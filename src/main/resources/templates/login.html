@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org"> <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Grupo Antonio</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/loginEstilos.css">
+</head>
+<body>
+    <a href="/" class="boton-volver">
+        <i class="fas fa-arrow-left"></i>
+        <span>Volver</span>
+    </a>
+    
+    <div class="contenedor-login">
+        <div class="logo-login">
+            <span class="logo-grupo">GRUPO</span><br>
+            <span class="logo-antonio">ANTONIO</span>
+        </div>
+        
+        <div class="formulario-login">
+            <h2 class="titulo-login">Iniciar Sesión</h2>
+            
+            <form th:action="@{/usuario/login}" method="post">
+    
+    <input type="hidden" name="redirect" th:value="${param.redirect}" />
+
+    <div class="campo-input">
+        <i class="fas fa-user"></i>
+        <input type="email" id="username" name="username" placeholder="Correo Electrónico" required>
+    </div>
+    
+    <div class="campo-input">
+        <i class="fas fa-lock"></i>
+        <input type="password" id="password" name="password" placeholder="Contraseña" required>
+    </div>
+    
+    <button type="submit" class="boton-login">Iniciar sesión</button>
+
+    <p th:if="${error}" th:text="${error}" style="color: red; text-align: center; margin-top: 10px;"></p>
+    
+    <p th:if="${param.logout}" style="color: green; text-align: center;">Has cerrado sesión correctamente</p>
+</form>
+
+            <div class="enlaces-login">
+                <p class="enlace-izquierda">¿No tienes cuenta?</p>
+                <a href="/usuario/registro" class="enlace-derecha">Registrarte</a>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>

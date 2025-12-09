@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Seguimiento de Pedidos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" th:href="@{/css/inicio-dashboardEstilos.css}"> 
+    
+    <style>
+        /* Mejora del efecto hover existente: Añadir un brillo suave */
+.boton-perfil-rojo:hover {
+    background-color: #b71c1c; /* Color más oscuro */
+    transform: translateY(-2px); /* Eleva el botón ligeramente */
+    
+    /* Efecto de sombra roja sutil (el "Glow") */
+    box-shadow: 0 8px 15px rgba(211, 47, 47, 0.5); 
+    
+    /* Añadir transición para que el cambio de sombra sea suave */
+    transition: all 0.3s ease;
+}
+        /* ==================== VARIABLES Y RESET ==================== */
+        :root {
+            --primary: #e60000;
+            --bg-body: #f8f9fa;
+            --bg-card: #ffffff;
+            --text-dark: #333333;
+            --text-muted: #666666;
+            --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+            --success: #10b981;
+            --step-done: #e60000; /* Rojo para pasos completados */
+            --step-current: #ffc107; /* Amarillo para paso actual */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ==================== LAYOUT Y ENCABEZADO ==================== */
+        .page-header {
+            background: var(--bg-card);
+            padding: 25px 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-card);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .page-header h1 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* Cronología a la izquierda, Resumen a la derecha */
+            gap: 30px;
+        }
+
+        /* ==================== TARJETAS GENERALES ==================== */
+        .card {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-card);
+            margin-bottom: 20px;
+        }
+        
+        /* ==================== CRONOLOGÍA / TRACKING (IZQUIERDA) ==================== */
+        .tracking-timeline {
+            position: relative;
+            padding: 0 0 0 20px;
+        }
+        .timeline-item {
+            position: relative;
+            padding-bottom: 40px;
+        }
+        
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        /* Línea vertical */
+        .tracking-timeline::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            bottom: 5px;
+            left: 0;
+            width: 2px;
+            background: #e0e0e0;
+        }
+
+        /* Círculo indicador */
+        .timeline-indicator {
+            position: absolute;
+            left: -10px;
+            top: 0;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            border: 3px solid var(--bg-card);
+            transition: all 0.3s;
+        }
+
+        /* Estado COMPLETADO */
+        .timeline-item.completed .timeline-indicator {
+            background: var(--step-done);
+            border-color: #fff5f5;
+        }
+        /* Icono para completado */
+        .timeline-item.completed .timeline-indicator i {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            font-size: 0.7rem;
+            color: white;
+        }
+
+        /* Estado ACTUAL */
+        .timeline-item.current .timeline-indicator {
+            background: var(--step-current);
+            border: 4px solid #fff5f5;
+            box-shadow: 0 0 0 4px var(--step-current);
+        }
+
+        .timeline-content h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .timeline-content p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .timeline-date {
+            font-size: 0.8rem;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        /* ==================== RESUMEN PEDIDO (DERECHA) ==================== */
+        .summary-card h2 {
+            font-size: 1.3rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-details div {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 0.95rem;
+            border-bottom: 1px dashed #f0f0f0;
+        }
+        
+        .summary-details div:last-child {
+            border-bottom: none;
+        }
+
+        .summary-total {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid #ddd;
+            font-weight: 700;
+            font-size: 1.1rem !important;
+        }
+        
+        .summary-total span:first-child {
+             color: var(--primary);
+        }
+        
+        .summary-total span:last-child {
+             color: var(--text-dark);
+        }
+
+        .btn-historial {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            text-align: center;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .btn-historial:hover {
+            background: #cc0000;
+            transform: translateY(-1px);
+        }
+
+        /* ==================== Responsive ==================== */
+        @media (max-width: 992px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+ <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+<div class="logo">
+    <a href="/" style="text-decoration: none; color: inherit;"> 
+        <span class="logo-grupo">GRUPO</span>
+        <span class="logo-antonio">ANTONIO</span>
+    </a>
+</div>            <button class="toggle-sidebar" id="toggleSidebar"><i class="fas fa-bars"></i></button>
+        </div>
+       <nav class="sidebar-nav">
+
+    <div th:if="${rolUsuario == 'ADMIN'}">
+        <p class="menu-label">Administración</p>
+        
+        <a href="/usuario/dashboard" class="nav-item" 
+           th:classappend="${activePage == 'dashboard'} ? 'active'">
+           <i class="fas fa-chart-line"></i><span>Dashboard</span>
+        </a>
+
+        <a href="/usuario/panel_usuario" class="nav-item" 
+           th:classappend="${activePage == 'usuarios'} ? 'active'">
+           <i class="fas fa-users-cog"></i><span>Usuarios</span>
+        </a>
+
+        <a href="/usuario/panel_productos" class="nav-item" 
+           th:classappend="${activePage == 'productos'} ? 'active'">
+           <i class="fas fa-box"></i><span>Productos</span>
+        </a>
+    </div>
+
+    <div th:if="${rolUsuario == 'ADMIN' or rolUsuario == 'VENDEDOR'}">
+        <p class="menu-label" th:if="${rolUsuario == 'VENDEDOR'}">Área de Ventas</p>
+
+        <a href="/usuario/pedidos" class="nav-item" 
+           th:classappend="${activePage == 'pedidos'} ? 'active'">
+           <i class="fas fa-shopping-cart"></i><span>Pedidos</span>
+        </a>
+    </div>
+
+    <div th:if="${rolUsuario == 'ADMIN' or rolUsuario == 'USUARIO' or rolUsuario == 'USER'}">
+        <p class="menu-label" th:if="${rolUsuario != 'ADMIN'}">Mi Cuenta</p>
+        
+        <a href="/usuario/seguimiento" class="nav-item" 
+           th:classappend="${activePage == 'seguimiento'} ? 'active'">
+           <i class="fas fa-truck"></i><span>Mis Pedidos</span>
+        </a>
+
+        <a href="/" class="nav-item" th:if="${rolUsuario != 'ADMIN'}">
+            <i class="fas fa-store"></i><span>Ir a Tienda</span>
+        </a>
+    </div>
+
+    <div class="nav-spacer"></div>
+    
+    <a href="/usuario/logout" class="nav-item">
+        <i class="fas fa-sign-out-alt"></i><span>Cerrar Sesión</span>
+    </a>
+
+</nav>
+        <div class="sidebar-footer">
+            <div class="sidebar-user-box">
+                <h4 class="sidebar-user-name" th:text="${nombreUsuario}">Usuario</h4>
+                <p class="sidebar-user-status"><span class="status-dot"></span> Online</p>
+            </div>
+        </div>
+    </aside>
+
+
+    <div class="container">
+        
+        <div class="page-header">
+            <h1>Hola, <span id="nombreCliente">José Pérez</span></h1>
+            <div style="font-size: 0.9rem; color: var(--text-muted);">
+                Último acceso: <span id="fechaAcceso">05/12/2025 02:50</span>
+            </div>
+        </div>
+
+        <div class="main-grid">
+            
+            <div>
+                <h2 style="margin-bottom: 20px; font-size: 1.4rem;">Seguimiento del Pedido #<span id="pedidoId">90123</span></h2>
+
+                <div class="card tracking-timeline">
+                    
+                    <div class="timeline-item completed">
+                        <div class="timeline-indicator"><i class="fas fa-check"></i></div>
+                        <div class="timeline-content">
+                            <h3>Pedido Recibido y Confirmado</h3>
+                            <p>Tu orden ha sido procesada y se ha iniciado la preparación.</p>
+                            <span class="timeline-date">01 Dic, 10:30</span>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item completed">
+                        <div class="timeline-indicator"><i class="fas fa-box"></i></div>
+                        <div class="timeline-content">
+                            <h3>Artículos Empacados y Listos</h3>
+                            <p>Hemos verificado y empacado todos los productos de tu pedido.</p>
+                            <span class="timeline-date">02 Dic, 14:00</span>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item current">
+                        <div class="timeline-indicator"></div>
+                        <div class="timeline-content">
+                            <h3>En Ruta a tu Domicilio</h3>
+                            <p>El pedido está en manos de la empresa de transporte. Próxima actualización en 24h.</p>
+                            <span class="timeline-date">05 Dic, 08:00</span>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-indicator"></div>
+                        <div class="timeline-content">
+                            <h3>Estimación de Entrega: <span style="color: var(--step-done); font-weight: 600;">06 Dic</span></h3>
+                            <p>Esperamos la entrega a lo largo del día de mañana.</p>
+                            <span class="timeline-date">--:--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div>
+                <div class="card summary-card">
+                    <h2>Detalles del Pedido</h2>
+                    
+                    <div class="summary-details">
+                        <div>
+                            <span>Dirección de Envío</span>
+                            <span id="direccionEnvio">Av. El Sol 456, Miraflores, Lima</span>
+                        </div>
+                        <div>
+                            <span>Método de Pago</span>
+                            <span id="metodoPago">VISA (**** 5555)</span>
+                        </div>
+                        <div>
+                            <span>Artículos</span>
+                            <span id="cantidadArticulos">2 Productos</span>
+                        </div>
+                        <div>
+                            <span>Subtotal</span>
+                            <span id="subtotal">$89.90</span>
+                        </div>
+                        <div>
+                            <span>Costo de Envío</span>
+                            <span id="costoEnvio">$10.00</span>
+                        </div>
+                        <div class="summary-total">
+                            <span>TOTAL a Pagar</span>
+                            <span id="totalPagar">$99.90</span>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <button class="btn-historial" onclick="verHistorialPedidos()">
+                    <i class="fas fa-history"></i> Ver Historial Completo
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Función de simulación: se activaría al hacer clic en el botón de historial
+        function verHistorialPedidos() {
+            alert('Simulación: Redireccionando a la vista de Historial de Pedidos...');
+        }
+        
+        // Simulación: Actualiza la fecha y hora de acceso en el encabezado
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('es-PE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            const timeStr = now.toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('fechaAcceso').textContent = `${dateStr} ${timeStr}`;
+        });
+    </script>
+</body>
+</html>

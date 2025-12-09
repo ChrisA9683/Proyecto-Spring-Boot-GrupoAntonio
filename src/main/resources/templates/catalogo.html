@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo - Grupo Antonio</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="/css/catalogoEstilos.css">
+    <link rel="stylesheet" href="/css/chatbot.css">
+
+    <style>
+/* Contenedor para alinear el botón de perfil y el de salir */
+.usuario-logueado-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espacio entre el botón rojo y el botón de salir */
+}
+
+/* El Botón Rojo Principal */
+.boton-perfil-rojo {
+    background-color: #D32F2F; /* Rojo intenso */
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+    border-radius: 50px; /* Bordes muy redondeados */
+    text-decoration: none;
+    transition: background 0.3s ease, transform 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.boton-perfil-rojo:hover {
+    background-color: #b71c1c; /* Rojo más oscuro al pasar el mouse */
+    transform: translateY(-2px); /* Efecto de elevación */
+}
+
+/* El ícono de la izquierda (User/Shield) */
+.icono-grande {
+    font-size: 1.5rem;
+    margin-right: 10px;
+}
+
+/* Contenedor del texto (Nombre y Rol) */
+.info-usuario {
+    display: flex;
+    flex-direction: column; /* Pone uno debajo del otro */
+    line-height: 1.2;
+}
+
+.nombre-usuario {
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: capitalize; /* Primera letra mayúscula */
+}
+
+.rol-usuario {
+    font-size: 0.75rem; /* Letra pequeña */
+    opacity: 0.9;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Botón pequeño de salir (Power off) */
+.btn-salir {
+    background: none;
+    border: 2px solid #D32F2F;
+    color: #D32F2F;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.btn-salir:hover {
+    background-color: #D32F2F;
+    color: white;
+}
+    </style>
+    
+    <style id="modal-styles">
+        /* Variables de color (asumiendo color principal rojo de tu CSS) */
+        :root {
+            --color-rojo: #e63946;          
+            --color-rojo-hover: #cc313e;    
+            --color-texto-oscuro: #2c3e50;  
+            --color-texto-claro: #7f8c8d;   
+            --color-fondo-claro: #ecf0f1;   
+            --color-borde-suave: #dfe6e9;   
+            --transicion-rapida: all 0.2s ease-in-out;
+            --transicion-suave: all 0.3s ease-in-out;
+        }
+
+        /* ========================================================
+           1. ESTILOS DE LA MODAL DE COMPRA (Ventana de Cantidad)
+           ======================================================== */
+        .modal {
+            display: none; /* CORRECCIÓN: Oculto por defecto */
+            position: fixed; 
+            z-index: 10000; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%;
+            background-color: rgba(0,0,0,0.6); 
+            /* Se usan en JS para mostrar: display: flex; justify-content: center; align-items: center; */
+            padding: 20px;
+            box-sizing: border-box;
+            animation: fadeInBackground 0.3s ease-out;
+        }
+        @keyframes fadeInBackground {
+            from { background-color: rgba(0,0,0,0); }
+            to { background-color: rgba(0,0,0,0.6); }
+        }
+
+        .modal-contenido {
+            background-color: #ffffff;
+            padding: 30px; 
+            border-radius: 8px; 
+            width: 90%; 
+            max-width: 500px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2); 
+            position: relative;
+            border: 1px solid var(--color-borde-suave); 
+            animation: slideInUp 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Botón de Cerrar */
+        .cerrar-modal {
+            color: var(--color-texto-claro); 
+            font-size: 30px; 
+            font-weight: 300; 
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+            transition: var(--transicion-rapida);
+        }
+        .cerrar-modal:hover, .cerrar-modal:focus {
+            color: var(--color-rojo); 
+            transform: rotate(90deg);
+        }
+
+        /* Header y contenido */
+        .modal-header {
+            display: flex; align-items: center; gap: 15px; margin-bottom: 20px;
+            padding-bottom: 15px; border-bottom: 2px solid var(--color-fondo-claro);
+        }
+        .modal-img {
+            width: 70px; height: 70px; object-fit: cover; border-radius: 6px;
+            border: 1px solid var(--color-borde-suave);
+        }
+        .modal-titulo {
+            color: var(--color-texto-oscuro); font-weight: 700; font-size: 1.4em;
+        }
+        .modal-descripcion {
+            font-size: 0.95em; color: var(--color-texto-claro); margin-bottom: 20px;
+        }
+
+        /* Precio Unitario */
+        .modal-info-precio {
+            padding: 15px 0; border-top: 1px solid var(--color-fondo-claro); margin-bottom: 20px;
+            font-size: 1em; font-weight: 500; color: var(--color-texto-oscuro);
+        }
+        .valor-unitario {
+            font-weight: 700; color: var(--color-rojo);
+        }
+
+        /* Selector de Cantidad */
+        .modal-selector-cantidad {
+            display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px;
+            padding: 10px 0; border-top: 1px solid var(--color-fondo-claro); border-bottom: 1px solid var(--color-fondo-claro);
+        }
+        .modal-selector-cantidad label {
+            font-weight: 600; color: var(--color-texto-oscuro);
+        }
+        .control-cantidad {
+            display: flex; align-items: center; border: 1px solid var(--color-borde-suave); border-radius: 6px; overflow: hidden;
+        }
+        .input-cantidad {
+            width: 60px; text-align: center; border: none; padding: 8px 0; font-size: 1em; background-color: white; font-weight: 600;
+        }
+        .btn-cantidad {
+            background-color: var(--color-fondo-claro); color: var(--color-texto-oscuro); border: none; padding: 8px 12px; cursor: pointer;
+            transition: var(--transicion-rapida);
+        }
+        .btn-cantidad:hover { background-color: var(--color-rojo); color: white; }
+
+        /* Subtotal y Botón de Agregar */
+        .modal-subtotal {
+            text-align: right; font-size: 1.3em; font-weight: 700; margin-bottom: 25px;
+            border-top: 2px solid var(--color-fondo-claro); padding-top: 15px; color: var(--color-texto-oscuro);
+        }
+        .valor-total-modal { color: var(--color-rojo); font-size: 1.1em; margin-left: 10px; }
+        
+        .btn-agregar-carrito {
+            width: 100%; padding: 16px; background-color: var(--color-rojo); color: white; border: none; border-radius: 6px;
+            font-size: 1.1em; font-weight: 700; transition: var(--transicion-suave); text-transform: uppercase;
+            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+        }
+        .btn-agregar-carrito:hover {
+            background-color: var(--color-rojo-hover); transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(230, 57, 70, 0.4);
+        }
+        .btn-agregar-carrito:active { transform: translateY(0); box-shadow: 0 2px 10px rgba(230, 57, 70, 0.2); }
+
+
+    </style>
+</head>
+<body>
+    
+    <header class="encabezado">
+        <nav class="navegacion">
+            <div class="logo">
+                <span class="logo-grupo">GRUPO</span>
+                <span class="logo-antonio">ANTONIO</span>
+            </div>
+
+            <ul class="menu-navegacion">
+                <li><a href="/">Inicio</a></li>
+                <li><a href="/usuario/catalogo" class="enlace-activo">Catálogo</a></li>
+                <li><a href="/usuario/servicios">Servicios</a></li>
+                <li><a href="/usuario/contacto">Contactos</a></li>
+            </ul>
+
+                    <div class="iconos-usuario">
+    <a href="/usuario/carrito" class="icono-enlace"><i class="fas fa-shopping-cart"></i></a>
+
+    <a sec:authorize="!isAuthenticated()" href="/usuario/login" class="icono-enlace login-box">
+        <i class="fas fa-user"></i>
+        <span class="login-text">Login →</span>
+    </a>
+
+    <div sec:authorize="isAuthenticated()" class="usuario-logueado-container">
+        
+        <a sec:authorize="hasRole('ROLE_ADMIN')" href="/usuario/dashboard" class="boton-perfil-rojo">
+            <i class="fas fa-user-shield icono-grande"></i>
+            <div class="info-usuario">
+                <span class="nombre-usuario" sec:authentication="name">Admin</span>
+                <span class="rol-usuario">Administrador</span>
+            </div>
+        </a>
+
+        <a sec:authorize="hasRole('ROLE_VENDEDOR')" href="/usuario/pedidos" class="boton-perfil-rojo">
+            <i class="fas fa-user-tie icono-grande"></i>
+            <div class="info-usuario">
+                <span class="nombre-usuario" sec:authentication="name">Vendedor</span>
+                <span class="rol-usuario">Ventas</span>
+            </div>
+        </a>
+
+        <a sec:authorize="hasRole('ROLE_USER')" href="/usuario/seguimiento" class="boton-perfil-rojo">
+            <i class="fas fa-user-circle icono-grande"></i>
+            <div class="info-usuario">
+                <span class="nombre-usuario" sec:authentication="name">Cliente</span>
+                <span class="rol-usuario">Mis Pedidos</span>
+            </div>
+        </a>
+
+        <form th:action="@{/ejecutar-logout}" method="post" class="form-logout">
+    <button type="submit" class="btn-salir" title="Cerrar Sesión">
+        <i class="fas fa-sign-out-alt"></i>
+    </button>
+</form>
+    </div>
+</div>
+
+            <button class="boton-menu-movil">
+                <i class="fas fa-bars"></i>
+            </button>
+        </nav>
+    </header>
+    
+    <section class="seccion-catalogo">
+        <div class="contenedor">
+            <h1 class="titulo-catalogo">Catálogo de Productos</h1>
+            
+            <div class="carrusel-contenedor">
+                <div class="carrusel">
+                    <div class="carrusel-item activo">
+                        <img src="/imagenes/catalogo_one.jpg" alt="Producto 1">
+                    </div>
+                    <div class="carrusel-item">
+                        <img src="/imagenes/catalogo_two.jpg" alt="Producto 2">
+                    </div>
+                    <div class="carrusel-item">
+                        <img src="/imagenes/catalogo_tree.jpg" alt="Producto 3">
+                    </div>
+                </div>
+                <div class="carrusel-indicadores">
+                    <span class="indicador activo" data-slide="0"></span>
+                    <span class="indicador" data-slide="1"></span>
+                    <span class="indicador" data-slide="2"></span>
+                </div>
+            </div>
+            
+            <div class="primer_catalogo">
+                <div class="producto-item">
+                    <img src="/imagenes/1_.jpg">
+                    <div class="Descripcion">
+                        <h3 class="producto-nombre">Bandeja Portacables Tipo Escalera</h3>
+                    <p class="producto-descripcion">Ideal para instalaciones industriales, fabricada en acero galvanizado de alta resistencia.</p>
+                    <p class="producto-precio">S/ 150.00 por metro</p>
+                    </div>
+                </div>
+                <div class="producto-item">
+                    <img src="/imagenes/2_.jpg">
+                    <div class="Descripcion">
+                        <h3 class="producto-nombre">Bandeja Portacables Tipo Escalera</h3>
+                        <p class="producto-descripcion">Ideal para instalaciones industriales, fabricada en acero galvanizado de alta resistencia.</p>
+                        <p class="producto-precio">S/ 150.00 por metro</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lista-productos">
+    <!-- Aquí se renderizan los productos -->
+    <div th:each="producto : ${productos}" class="producto-item-general" 
+         th:data-nombre="${producto.nombre}" 
+         th:data-descripcion="${producto.descripcion}" 
+         th:data-precio="${producto.precio}" 
+         th:data-unidad="${producto.unidad}" 
+         th:data-id="${producto.id}" 
+         th:data-imagen="${producto.imagenUrl}">
+        
+        <!-- Imagen del Producto -->
+        <img th:src="@{${producto.imagenUrl}}" alt="Imagen del Producto">
+        
+        <div class="Descripcion">
+            <h3 class="producto-nombre" th:text="${producto.nombre}">Nombre Producto</h3>
+            <p class="producto-descripcion" th:text="${producto.descripcion}">Descripción</p>
+            <p class="producto-precio" th:text="'S/ ' + ${producto.precio} + ' por ' + ${producto.unidad}">Precio</p>
+        </div>
+        
+        <!-- Botón para abrir el modal -->
+        <button class="icono-comprar btn-abrir-modal">
+            <i class="fas fa-shopping-bag"></i>
+        </button>
+    </div>
+</div>
+
+        </div>
+    </section>
+    
+    <section class="seccion-destacados">
+        <div class="contenedor">
+            <h2 class="titulo-destacados">Productos Destacados</h2>
+        </div>
+    </section>
+    
+    <section class="seccion-tarjetas">
+        <div class="contenedor">
+            <div class="grid-tarjetas">
+                <div class="tarjeta-producto">
+                    <div class="tarjeta-imagen">
+                        <img src="/imagenes/image-removebg-preview.png" alt="Bandeja Escalera">
+                    </div>
+                    <div class="tarjeta-contenido">
+                        <h3 class="tarjeta-titulo">Bandeja Tipo Escalera</h3>
+                        <p class="tarjeta-descripcion">Sistema robusto y versátil para instalaciones industriales de alto rendimiento.</p>
+                        <button class="boton-ver-mas">Ver más</button>
+                    </div>
+                </div>
+                
+                <div class="tarjeta-producto">
+                    <div class="tarjeta-imagen">
+                        <img src="/imagenes/622-panduit">
+                    </div>
+                    <div class="tarjeta-contenido">
+                        <h3 class="tarjeta-titulo">Bandeja Perforada</h3>
+                        <p class="tarjeta-descripcion">Óptima ventilación y gestión térmica para instalaciones de telecomunicaciones.</p>
+                        <button class="boton-ver-mas">Ver más</button>
+                    </div>
+                </div>
+                
+                <div class="tarjeta-producto">
+                    <div class="tarjeta-imagen">
+                        <img src="/imagenes/476178671_1131422328680481_1255960501018431618_n.jpg" alt="Bandeja Lisa">
+                    </div>
+                    <div class="tarjeta-contenido">
+                        <h3 class="tarjeta-titulo">Bandeja Lisa</h3>
+                        <p class="tarjeta-descripcion">Diseño limpio y moderno, perfecto para instalaciones comerciales elegantes.</p>
+                        <button class="boton-ver-mas">Ver más</button>
+                    </div>
+                </div>
+                
+                <div class="tarjeta-producto">
+                    <div class="tarjeta-imagen">
+                        <img src="/imagenes/476176719_1131428318679882_4463144649075994097_n.jpg" alt="Accesorios">
+                    </div>
+                    <div class="tarjeta-contenido">
+                        <h3 class="tarjeta-titulo">Accesorios Premium</h3>
+                        <p class="tarjeta-descripcion">Conectores, soportes y accesorios de la más alta calidad para tu proyecto.</p>
+                        <button class="boton-ver-mas">Ver más</button>
+                    </div>
+                </div>
+                
+                <div class="tarjeta-producto">
+                    <div class="tarjeta-imagen">
+                        <img src="/imagenes/image-removebg-preview.png" alt="Bandeja Reforzada">
+                    </div>
+                    <div class="tarjeta-contenido">
+                        <h3 class="tarjeta-titulo">Bandeja Reforzada</h3>
+                        <p class="tarjeta-descripcion">Capacidad de carga superior para proyectos industriales exigentes.</p>
+                        <button class="boton-ver-mas">Ver más</button>
+                    </div>
+                </div>
+                
+                <div class="tarjeta-producto">
+                    <div class="tarjeta-imagen">
+                        <img src="/imagenes/622-panduit" alt="Sistema Completo">
+                    </div>
+                    <div class="tarjeta-contenido">
+                        <h3 class="tarjeta-titulo">Sistema Completo</h3>
+                        <p class="tarjeta-descripcion">Solución integral con todos los componentes necesarios para tu instalación.</p>
+                        <button class="boton-ver-mas">Ver más</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer class="pie-pagina">
+        <div class="contenedor">
+            <div class="contenido-footer">
+                <div class="columna-footer">
+                    <div class="logo-footer">
+                        <span class="logo-grupo">Grupo</span><br>
+                        <span class="logo-antonio">Antonio</span>
+                    </div>
+                    <p class="texto-footer">
+                        Las mejores bandejas portacables del Perú
+                    </p>
+                </div>
+                
+                <div class="separador-footer"></div>
+                
+                <div class="columna-footer">
+                    <h4 class="titulo-footer">Contacto</h4>
+                    <p class="texto-footer">
+                        <i class="fas fa-phone"></i> +51 937 487 697
+                    </p>
+                    <p class="texto-footer">
+                        <i class="fas fa-envelope"></i> info@grupoantonio.pe
+                    </p>
+                </div>
+                
+                <div class="columna-footer">
+                    <h4 class="titulo-footer">Síguenos</h4>
+                    <div class="redes-sociales">
+                        <a href="https://www.instagram.com/" class="icono-red-social" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.facebook.com/cooperbandstrut" class="icono-red-social" target="_blank"><i class="fab fa-instagram"></i></a>
+                        <a href="https://wa.me/927600289" class="icono-red-social" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                
+                <div class="columna-footer columna-direcciones">
+                    <h4 class="titulo-footer">Ubicaciones</h4>
+                    <p class="texto-footer">
+                        <i class="fas fa-map-marker-alt"></i> Av. Argentina 327 La Bellota int. N-6 Lima
+                    </p>
+                    <p class="texto-footer">
+                        <i class="fas fa-industry"></i> Asc. Agrop. Haras S/N, Huachipa, Lurigancho, Lima
+                    </p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 Grupo Antonio. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <div id="modal-producto" class="modal">
+        
+        
+        
+        <div class="modal-contenido">
+            <span class="cerrar-modal" id="cerrar-modal">&times;</span>
+            <div class="modal-header">
+                <img id="modal-imagen-producto" src="" alt="Imagen Producto" class="modal-img">
+                <h3 id="modal-nombre-producto" class="modal-titulo">Nombre del Producto</h3>
+            </div>
+            <p id="modal-descripcion-producto" class="modal-descripcion">Descripción del producto...</p>
+            
+            <div class="modal-info-precio">
+                <p>Precio Unitario: <span id="modal-precio-unitario" class="valor-unitario">S/ 0.00 por metro</span></p>
+            </div>
+
+            <div class="modal-selector-cantidad">
+                <label for="input-cantidad-modal">Cantidad (<span id="modal-unidad-medida">unidad</span>):</label>
+                <div class="control-cantidad">
+                    <button type="button" class="btn-cantidad btn-menos-modal" id="btn-menos-modal"><i class="fas fa-minus"></i></button>
+                    <input type="number" id="input-cantidad-modal" value="1" min="1">
+                    <button type="button" class="btn-cantidad btn-mas-modal" id="btn-mas-modal"><i class="fas fa-plus"></i></button>
+                </div>
+            </div>
+
+            <div class="modal-subtotal">
+                <p>Subtotal: <span id="modal-subtotal-valor" class="valor-total-modal">S/ 0.00</span></p>
+            </div>
+
+            <button id="btn-agregar-carrito" class="btn-agregar-carrito">
+                <i class="fas fa-cart-plus"></i> Agregar a mi Carrito
+            </button>
+            <input type="hidden" id="producto-id-seleccionado" value="">
+            <input type="hidden" id="producto-precio-base" value="">
+        </div>
+        
+    </div>
+    
+    <div id="modal-exito" class="modal-exito">
+        <div class="modal-exito-contenido">
+            <i class="fas fa-check-circle icono-check"></i>
+            <h3 id="mensaje-exito" class="mensaje-exito">¡Producto(s) Agregado(s) con Éxito!</h3>
+        </div>
+    </div>
+
+    <div id="chatbot-toggle" class="chatbot-toggle">
+        <i class="fas fa-comments"></i>
+    </div>
+
+    <div id="chatbot-container" class="chatbot-hidden">
+        <div class="chatbot-header">
+            <div class="header-info">
+                <h4>Asistente Grupo Antonio</h4>
+                <p>Especialistas en bandejas</p>
+            </div>
+            <button id="close-chatbot" class="close-button">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="chatbot-messages" class="chatbot-messages">
+            </div>
+        <div class="chatbot-input-area">
+            <input type="text" id="chatbot-user-input" placeholder="Escribe tu mensaje...">
+            <button id="chatbot-send">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+    <script src="/js/chatbots.js"></script>
+    <script src="/js/catalogo.js"></script>
+       
+       
+    
+</body>
+</html>

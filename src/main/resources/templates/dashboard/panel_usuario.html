@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios - Grupo Antonio</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/inicio-dashboardEstilos.css}"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        
+        /* Mejora del efecto hover existente: Añadir un brillo suave */
+.boton-perfil-rojo:hover {
+    background-color: #b71c1c; /* Color más oscuro */
+    transform: translateY(-2px); /* Eleva el botón ligeramente */
+    
+    /* Efecto de sombra roja sutil (el "Glow") */
+    box-shadow: 0 8px 15px rgba(211, 47, 47, 0.5); 
+    
+    /* Añadir transición para que el cambio de sombra sea suave */
+    transition: all 0.3s ease;
+}
+        
+
+        /* =========================================
+           1. VARIABLES Y RESET (Igual que tu Dashboard)
+           ========================================= */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary: #e60000;      /* Rojo Marca */
+            --primary-dark: #b30000;
+            --bg-body: #f8f9fa;      /* Gris Fondo */
+            --bg-white: #ffffff;
+            --text-dark: #333333;
+            --text-muted: #666666;
+            --border-light: #e0e0e0;
+            --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        
+        /* =========================================
+           3. CONTENIDO PRINCIPAL
+           ========================================= */
+        .main-content {
+            margin-left: 270px; /* Sidebar width + gap */
+            flex: 1;
+            padding: 30px;
+        }
+
+        /* Header de Página (Título + Buscador) */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: var(--bg-white);
+            padding: 20px 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-card);
+        }
+
+        .header-title h1 {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin: 0;
+        }
+        .header-title small {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .user-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #eee;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        /* Buscador Estilo Dashboard */
+        .search-container {
+            position: relative;
+            width: 350px;
+        }
+        .search-bar {
+            width: 100%;
+            padding: 12px 40px 12px 20px;
+            border: 1px solid #eee;
+            background: #f9f9f9;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            outline: none;
+            transition: 0.3s;
+        }
+        .search-bar:focus {
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(230, 0, 0, 0.1);
+        }
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        /* =========================================
+           4. TABLA DE USUARIOS
+           ========================================= */
+        .card {
+            background: var(--bg-white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            padding: 5px;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px; /* Reducido para ajustarse a menos columnas */
+        }
+
+        .data-table thead {
+            background-color: #ececec; /* Gris suave encabezado */
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 18px 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table td {
+            padding: 20px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            vertical-align: middle;
+        }
+
+        .data-table tbody tr:hover {
+            background-color: #fffcfc; /* Ligero tono rojo al pasar mouse */
+        }
+
+        /* Estilos específicos columnas */
+        .col-id { font-weight: 600; color: var(--text-dark); }
+        .col-nombre { font-weight: 500; color: var(--text-dark); }
+        .col-email { color: var(--primary); text-decoration: none; }
+        
+        /* SELECTOR PERSONALIZADO (Tipo de Usuario) */
+        .select-wrapper {
+            position: relative;
+            width: 150px;
+        }
+        
+        .user-type-select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            cursor: pointer;
+            appearance: none; /* Quita flecha nativa */
+            -webkit-appearance: none;
+        }
+
+        .user-type-select:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+
+        .select-arrow {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            pointer-events: none;
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); transition: 0.3s; }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-left: 0; padding: 15px; }
+            .page-header { flex-direction: column; gap: 15px; align-items: flex-start; }
+            .search-container { width: 100%; }
+        }
+        
+        
+        .col-id { font-weight: 700; color: var(--text-dark); font-family: monospace; }
+        .col-email { color: var(--primary); text-decoration: none; font-weight: 500; }
+        .col-email:hover { text-decoration: underline; }
+        
+        .user-type-select {
+            padding: 6px 10px; border: 1px solid #ddd; border-radius: 6px;
+            background: white; font-size: 0.85rem; color: #555; cursor: pointer;
+        }
+        .user-type-select:focus { border-color: var(--primary); outline: none; }
+        
+        /* 1. BOTONES DE FILTRO */
+        .filters-wrapper {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: white;
+            border: 1px solid #e0e0e0;
+            padding: 10px 20px;
+            border-radius: 50px; /* Bordes muy redondeados */
+            color: var(--text-muted, #666);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            color: var(--primary-color, #e60000);
+            border-color: var(--primary-color, #e60000);
+        }
+
+        .filter-btn.active {
+            background: var(--primary-color, #e60000);
+            color: white;
+            border-color: var(--primary-color, #e60000);
+            box-shadow: 0 5px 15px rgba(230, 0, 0, 0.3);
+        }
+
+        /* 2. SELECTOR DE ROL DENTRO DE LA TABLA */
+        .role-select-container {
+            position: relative;
+            width: 140px;
+        }
+        
+        .role-select {
+            width: 100%;
+            padding: 8px 30px 8px 15px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            background-color: #f9f9f9;
+            color: #333;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            transition: 0.3s;
+        }
+
+        .role-select:focus {
+            background-color: white;
+            border-color: var(--primary-color, #e60000);
+            box-shadow: 0 0 0 3px rgba(230, 0, 0, 0.1);
+            outline: none;
+        }
+
+        .role-arrow {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.7rem;
+            color: #999;
+            pointer-events: none;
+        }
+
+        /* Colores de roles para identificación visual rápida en el select (opcional) */
+        .role-select option[value="ADMIN"] { color: #e60000; font-weight: bold; }
+        .role-select option[value="VENDEDOR"] { color: #f59e0b; font-weight: bold; }
+        .role-select option[value="USER"] { color: #10b981; font-weight: bold; }
+
+        /* 3. MODAL DE CONFIRMACIÓN (Estilo Glass/Clean) */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5); 
+            backdrop-filter: blur(4px); /* Efecto borroso moderno */
+            display: flex; justify-content: center; align-items: center;
+            z-index: 2000; opacity: 0; pointer-events: none; transition: 0.3s ease;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        
+        .modal-card {
+            background: white;
+            width: 400px;
+            padding: 35px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            transform: translateY(20px);
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal-overlay.active .modal-card { transform: translateY(0); }
+
+        .modal-icon-box {
+            width: 70px; height: 70px;
+            background: #fff5f5;
+            color: var(--primary-color, #e60000);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 30px;
+            margin: 0 auto 20px;
+        }
+
+        .modal-actions {
+            display: flex; gap: 15px; justify-content: center; margin-top: 25px;
+        }
+        
+        .btn-modal {
+            padding: 10px 25px; border-radius: 50px; border: none;
+            font-weight: 600; cursor: pointer; transition: 0.2s;
+        }
+        .btn-modal-cancel { background: #f0f0f0; color: #555; }
+        .btn-modal-cancel:hover { background: #e0e0e0; }
+        .btn-modal-confirm { 
+            background: var(--primary-color, #e60000); color: white; 
+            box-shadow: 0 5px 15px rgba(230, 0, 0, 0.3);
+        }
+        .btn-modal-confirm:hover { background: #cc0000; transform: translateY(-2px); }
+        
+        
+        /* Estilos específicos para esta vista */
+        .col-id { font-weight: 700; color: #333; font-family: monospace; }
+        .col-email { color: #e60000; text-decoration: none; font-weight: 500; }
+        .col-email:hover { text-decoration: underline; }
+        
+        .filters-wrapper { display: flex; gap: 10px; margin-bottom: 20px; }
+        .filter-btn { padding: 8px 16px; border-radius: 20px; border: 1px solid #eee; background: white; cursor: pointer; color: #666; font-size: 0.9rem; transition: 0.2s; }
+        .filter-btn:hover, .filter-btn.active { background: #e60000; color: white; border-color: #e60000; }
+        
+        /* Modal Form */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(2px); }
+        .modal-overlay.active { opacity: 1; pointer-events: all; }
+        .modal-content { background: white; padding: 30px; border-radius: 15px; width: 450px; transform: translateY(-20px); transition: 0.3s; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; color: #555; font-size: 0.9rem; font-weight: 500; }
+        .form-control { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 0.9rem; outline: none; transition: 0.2s; }
+        .form-control:focus { border-color: #e60000; box-shadow: 0 0 0 3px rgba(230,0,0,0.05); }
+        
+        .btn-new { background: #e60000; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-weight: 500; box-shadow: 0 4px 10px rgba(230,0,0,0.2); transition: 0.2s; }
+        .btn-new:hover { background: #cc0000; transform: translateY(-2px); }
+
+        @media (max-width: 768px) { .filters-wrapper { flex-wrap: wrap; } }
+    </style>
+</head>
+<body>
+
+    <div class="modal-overlay" id="usuarioModal">
+        <div class="modal-content">
+            <h3 id="modalTitle" style="margin: 0 0 20px 0; color: #333;">Nuevo Usuario</h3>
+            
+            <form th:action="@{/usuario/guardar}" method="post">
+                <input type="hidden" id="userId" name="id">
+                
+                <div class="form-group">
+                    <label>Nombre Completo</label>
+                    <input type="text" id="userNombre" name="nombre" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Correo Electrónico</label>
+                    <input type="email" id="userEmail" name="email" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Rol</label>
+                    <select id="userRol" name="rol" class="form-control">
+                        <option value="USER">Cliente</option>
+                        <option value="ADMIN">Administrador</option>
+                        <option value="VENDEDOR">Vendedor</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Contraseña <small style="color: #999; font-weight: normal;">(Dejar vacío si no cambia)</small></label>
+                    <input type="password" id="userPass" name="password" class="form-control" placeholder="******">
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px;">
+                    <button type="button" class="btn-modal btn-modal-cancel" onclick="cerrarModal('usuarioModal')">Cancelar</button>
+                    <button type="submit" class="btn-modal btn-modal-confirm">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="roleModal">
+        <div class="modal-content" style="text-align: center;">
+            <i class="fas fa-info-circle" style="font-size: 3rem; color: #e60000; margin-bottom: 15px;"></i>
+            <h3>Confirmar Cambio</h3>
+            <p style="color: #666; margin-bottom: 20px;">¿Deseas actualizar el rol desde la tabla?</p>
+            <div style="display: flex; justify-content: center; gap: 10px;">
+                <button class="btn-modal btn-modal-cancel" onclick="cerrarModal('roleModal')">Cancelar</button>
+                <button class="btn-modal btn-modal-confirm" id="btnConfirmarCambio">Sí, Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+     <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+<div class="logo">
+    <a href="/" style="text-decoration: none; color: inherit;"> 
+        <span class="logo-grupo">GRUPO</span>
+        <span class="logo-antonio">ANTONIO</span>
+    </a>
+</div>            <button class="toggle-sidebar" id="toggleSidebar"><i class="fas fa-bars"></i></button>
+        </div>
+       <nav class="sidebar-nav">
+
+    <div th:if="${rolUsuario == 'ADMIN'}">
+        <p class="menu-label">Administración</p>
+        
+        <a href="/usuario/dashboard" class="nav-item" 
+           th:classappend="${activePage == 'dashboard'} ? 'active'">
+           <i class="fas fa-chart-line"></i><span>Dashboard</span>
+        </a>
+
+        <a href="/usuario/panel_usuario" class="nav-item" 
+           th:classappend="${activePage == 'usuarios'} ? 'active'">
+           <i class="fas fa-users-cog"></i><span>Usuarios</span>
+        </a>
+
+        <a href="/usuario/panel_productos" class="nav-item" 
+           th:classappend="${activePage == 'productos'} ? 'active'">
+           <i class="fas fa-box"></i><span>Productos</span>
+        </a>
+    </div>
+
+    <div th:if="${rolUsuario == 'ADMIN' or rolUsuario == 'VENDEDOR'}">
+        <p class="menu-label" th:if="${rolUsuario == 'VENDEDOR'}">Área de Ventas</p>
+
+        <a href="/usuario/pedidos" class="nav-item" 
+           th:classappend="${activePage == 'pedidos'} ? 'active'">
+           <i class="fas fa-shopping-cart"></i><span>Pedidos</span>
+        </a>
+    </div>
+
+    <div th:if="${rolUsuario == 'ADMIN' or rolUsuario == 'USUARIO' or rolUsuario == 'USER'}">
+        <p class="menu-label" th:if="${rolUsuario != 'ADMIN'}">Mi Cuenta</p>
+        
+        <a href="/usuario/seguimiento" class="nav-item" 
+           th:classappend="${activePage == 'seguimiento'} ? 'active'">
+           <i class="fas fa-truck"></i><span>Mis Pedidos</span>
+        </a>
+
+        <a href="/" class="nav-item" th:if="${rolUsuario != 'ADMIN'}">
+            <i class="fas fa-store"></i><span>Ir a Tienda</span>
+        </a>
+    </div>
+
+    <div class="nav-spacer"></div>
+    
+    <a href="/usuario/logout" class="nav-item">
+        <i class="fas fa-sign-out-alt"></i><span>Cerrar Sesión</span>
+    </a>
+
+</nav>
+        <div class="sidebar-footer">
+            <div class="sidebar-user-box">
+                <h4 class="sidebar-user-name" th:text="${nombreUsuario}">Usuario</h4>
+                <p class="sidebar-user-status"><span class="status-dot"></span> Online</p>
+            </div>
+        </div>
+    </aside>
+
+
+    <main class="main-content">
+        
+        <div class="welcome-section" style="margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;">
+            <div class="welcome-text">
+                <h2>Gestión de Usuarios <span style="font-size: 0.8em; background: #eee; padding: 2px 10px; border-radius: 20px; margin-left: 10px;"><i class="fas fa-users"></i> <span th:text="${totalUsuarios}">0</span></span></h2>
+            </div>
+            
+            <button class="btn-new" onclick="abrirModalCrear()">
+                <i class="fas fa-plus"></i> Nuevo Usuario
+            </button>
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+            <div class="filters-wrapper">
+                <button class="filter-btn active" onclick="filtrarTabla('all', this)">Todos</button>
+                <button class="filter-btn" onclick="filtrarTabla('USER', this)">Clientes</button>
+                <button class="filter-btn" onclick="filtrarTabla('VENDEDOR', this)">Vendedores</button>
+                <button class="filter-btn" onclick="filtrarTabla('ADMIN', this)">Admins</button>
+            </div>
+            
+            <div class="search-container" style="width: 300px;">
+                <input type="text" id="buscadorInput" placeholder="Buscar usuario..." class="search-bar">
+                <button class="search-button"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+
+        <div class="table-card" style="background: white; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); padding: 25px;">
+            <div class="table-container">
+                <table class="data-table" id="tablaUsuarios" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="padding: 15px;">ID</th>
+                            <th style="padding: 15px;">Nombre</th>
+                            <th style="padding: 15px;">Email</th>
+                            <th style="padding: 15px;">Rol</th>
+                            <th style="padding: 15px; text-align: center;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="usuario : ${listaUsuarios}" th:attr="data-rol=${usuario.rol?.nombre ?: 'N/A'}">
+                            <td class="col-id" style="padding: 15px;" th:text="${usuario.id}">1</td>
+                            <td style="padding: 15px; font-weight: 500;" th:text="${usuario.nombre}">Nombre</td>
+                            <td style="padding: 15px;"><a href="#" class="col-email" th:text="${usuario.email}">email</a></td>
+                            <td style="padding: 15px;">
+                                <div class="role-select-container">
+                                    <select class="role-select" th:id="'select-rol-' + ${usuario.id}">
+                                        <option value="USER" 
+                                                th:selected="${usuario.rol?.nombre == 'USER'}">Cliente</option>
+                                        <option value="ADMIN" 
+                                                th:selected="${usuario.rol?.nombre == 'ADMIN'}">Admin</option>
+                                        <option value="VENDEDOR" 
+                                                th:selected="${usuario.rol?.nombre == 'VENDEDOR'}">Vendedor</option>
+                                    </select>
+                                    <i class="fas fa-chevron-down role-arrow"></i>
+                                </div>
+                            </td>
+
+                            <td style="padding: 15px; text-align: center;">
+    <div style="display: flex; justify-content: center; gap: 8px;">
+        <button class="btn-action" title="Guardar Rol"
+                th:onclick="'prepararGuardado(' + ${usuario.id} + ')'"
+                style="background: #fff; border: 1px solid #e60000; color: #e60000; width: 32px; height: 32px; border-radius: 6px; cursor: pointer;">
+            <i class="fas fa-check"></i>
+        </button>
+        
+        <button class="btn-action" title="Editar Usuario"
+                th:data-id="${usuario.id}"
+                th:data-nombre="${usuario.nombre}"
+                th:data-email="${usuario.email}"
+                th:data-rol="${usuario.rol?.nombre ?: 'USER'}"
+                onclick="abrirModalEditar(this)"
+                style="background: #e60000; color: white; border: none; width: 32px; height: 32px; border-radius: 6px; cursor: pointer;">
+            <i class="fas fa-pen"></i>
+        </button>
+        
+        <button class="btn-action" title="Eliminar Usuario"
+                th:onclick="'prepararEliminacion(' + ${usuario.id} + ')'"
+                style="background: #f8d7da; border: 1px solid #dc3545; color: #dc3545; width: 32px; height: 32px; border-radius: 6px; cursor: pointer;">
+            <i class="fas fa-trash"></i>
+        </button>
+    </div>
+</td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(listaUsuarios)}">
+                            <td colspan="5" style="text-align: center; padding: 30px; color: #999;">No hay usuarios.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    
+    <div class="modal-overlay" id="deleteModal">
+    <div class="modal-content" style="text-align: center;">
+        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #dc3545; margin-bottom: 15px;"></i>
+        <h3>Confirmar Eliminación</h3>
+        <p style="color: #666; margin-bottom: 20px;">
+            Estás a punto de eliminar al usuario con ID: 
+            <strong id="deleteUserIdDisplay" style="color: #333;">[ID]</strong>. Esta acción es irreversible.
+        </p>
+        <div style="display: flex; justify-content: center; gap: 10px;">
+            <button class="btn-modal btn-modal-cancel" onclick="cerrarModal('deleteModal')">Cancelar</button>
+            <button class="btn-modal" id="btnConfirmarEliminacion" style="background: #dc3545; color: white;">Sí, Eliminar</button>
+        </div>
+    </div>
+</div>
+    
+
+<script>
+    // =======================================================
+    // 🗄️ 1. VARIABLES GLOBALES (Para gestionar IDs pendientes)
+    // =======================================================
+    let idUsuarioAEliminar = null;
+    window.idUsuarioPendiente = null; 
+    window.nuevoRolPendiente = null; 
+
+    // =======================================================
+    // ⚙️ 2. FUNCIONES DE UI Y UTILIDAD (Llamadas por onclick)
+    // =======================================================
+
+    function cerrarModal(id) { 
+        const modal = document.getElementById(id);
+        if(modal) {
+            modal.classList.remove('active'); 
+        }
+    }
+    
+    function showToast(msj, tipo) {
+        let box = document.getElementById('toast-container');
+        if (!box) return;
+        
+        let div = document.createElement('div');
+        const colorBg = tipo === 'success' ? '#10b981' : '#ef4444';
+        const icono = tipo === 'success' ? 'check' : 'exclamation';
+
+        div.style.cssText = `position: fixed; top: 20px; right: 20px; padding: 15px 25px; border-radius: 12px; color: white; z-index: 3000; background: ${colorBg}; box-shadow: 0 10px 30px rgba(0,0,0,0.15); display: flex; gap: 10px; align-items: center; transform: translateX(120%); transition: 0.4s;`;
+        div.innerHTML = `<i class="fas fa-${icono}-circle"></i> ${msj}`;
+        
+        box.appendChild(div);
+        setTimeout(() => div.style.transform = 'translateX(0)', 100);
+        setTimeout(() => { 
+            div.style.transform = 'translateX(120%)'; 
+            setTimeout(() => div.remove(), 300); 
+        }, 3000);
+    }
+    
+    function abrirModalCrear() {
+        const modalUser = document.getElementById('usuarioModal');
+        const titleUser = document.getElementById('modalTitle');
+        const uId = document.getElementById('userId');
+        const uNombre = document.getElementById('userNombre');
+        const uEmail = document.getElementById('userEmail');
+        const uRol = document.getElementById('userRol');
+
+        if (titleUser) titleUser.textContent = "Nuevo Usuario";
+        
+        // Limpiamos campos
+        if (uId) uId.value = '';  
+        if (uNombre) uNombre.value = '';  
+        if (uEmail) uEmail.value = '';  
+        if (uRol) uRol.value = 'USER';  
+
+        if (modalUser) {
+            modalUser.classList.add('active');
+        } else {
+            console.error("Error JS: El modal '#usuarioModal' no se encontró.");
+        }
+    }
+    
+    function abrirModalEditar(btn) {
+        const modalUser = document.getElementById('usuarioModal');
+        const titleUser = document.getElementById('modalTitle');
+        const uId = document.getElementById('userId');
+        const uNombre = document.getElementById('userNombre');
+        const uEmail = document.getElementById('userEmail');
+        const uRol = document.getElementById('userRol');
+        
+        if (titleUser) titleUser.textContent = "Editar Usuario";
+        
+        // Llenamos campos desde data-atributos
+        if (uId) uId.value = btn.getAttribute('data-id');
+        if (uNombre) uNombre.value = btn.getAttribute('data-nombre');
+        if (uEmail) uEmail.value = btn.getAttribute('data-email');
+        if (uRol) uRol.value = btn.getAttribute('data-rol'); 
+        
+        if (modalUser) {
+            modalUser.classList.add('active');
+        }
+    }
+
+    function prepararGuardado(id) {
+        const sel = document.getElementById('select-rol-' + id);
+        const modalRole = document.getElementById('roleModal');
+        
+        if(sel && modalRole) {
+            window.idUsuarioPendiente = id;
+            window.nuevoRolPendiente = sel.value; 
+            modalRole.classList.add('active');
+        }
+    }
+
+    function prepararEliminacion(id) {
+        idUsuarioAEliminar = id;
+        const modal = document.getElementById('deleteModal');
+        const displayId = document.getElementById('deleteUserIdDisplay');
+        
+        if (displayId) displayId.textContent = id;
+        if (modal) modal.classList.add('active');
+    }
+
+    function filtrarTabla(rol, btn) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        if(btn) btn.classList.add('active'); 
+        
+        const filas = document.querySelectorAll('#tablaUsuarios tbody tr');
+        const searchInput = document.getElementById('buscadorInput');
+        const searchVal = searchInput ? searchInput.value.toLowerCase() : "";
+        
+        filas.forEach(f => {
+            const currentRol = f.getAttribute('data-rol');
+            const rowText = f.innerText.toLowerCase(); 
+
+            const rolMatch = (rol === 'all' || currentRol === rol);
+            const searchMatch = (rowText.includes(searchVal));
+            
+            if (rolMatch && searchMatch) {
+                f.style.display = ''; 
+            } else {
+                f.style.display = 'none';
+            }
+        });
+    }
+
+    // =======================================================
+    // 🚀 3. LÓGICA DE INICIALIZACIÓN (DOMContentLoaded)
+    // =======================================================
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // --- Inicialización de Sidebar ---
+        const toggleBtn = document.getElementById('toggleSidebar');
+        const sidebar = document.getElementById('sidebar');
+        if(toggleBtn) {
+            toggleBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('active'); 
+            });
+        }
+
+        // --- Listener del Buscador ---
+        const buscadorInput = document.getElementById('buscadorInput');
+        if (buscadorInput) {
+            buscadorInput.addEventListener('keyup', function() {
+                const activeBtn = document.querySelector('.filter-btn.active');
+                
+                // Extraemos el rol del onclick del botón activo
+                const rolActivo = activeBtn ? activeBtn.getAttribute('onclick').match(/'(.*?)'/)[1] : 'all';
+                
+                filtrarTabla(rolActivo, activeBtn);
+            });
+        }
+        
+        // --- AJAX: Confirmación de Cambio de Rol ---
+        const btnConfirmarCambio = document.getElementById('btnConfirmarCambio');
+        if (btnConfirmarCambio) {
+            btnConfirmarCambio.addEventListener('click', () => {
+                
+                if(!window.idUsuarioPendiente || !window.nuevoRolPendiente) return; 
+
+                let formData = new FormData();
+                formData.append('rol', window.nuevoRolPendiente);
+
+                fetch(`/usuario/cambiar-rol/${window.idUsuarioPendiente}`, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text()) 
+                .then(data => {
+                    if(data && data.trim() === 'OK') { 
+                        showToast("Rol actualizado correctamente", "success");
+                        setTimeout(() => window.location.reload(), 1000); 
+                    } else {
+                        showToast("Error al actualizar rol", "error");
+                    }
+                    cerrarModal('roleModal');
+                })
+                .catch(err => {
+                    console.error("AJAX Error:", err);
+                    showToast("Error de conexión con el servidor", "error");
+                    cerrarModal('roleModal');
+                });
+            });
+        }
+
+        // --- AJAX: Confirmación de Eliminación ---
+        const btnConfirmarEliminacion = document.getElementById('btnConfirmarEliminacion');
+        if (btnConfirmarEliminacion) {
+            btnConfirmarEliminacion.addEventListener('click', () => {
+                
+                if (!idUsuarioAEliminar) return;
+
+                fetch(`/usuario/eliminar/${idUsuarioAEliminar}`, {
+                    method: 'POST', // Coincide con el @PostMapping en el Controller
+                })
+                .then(response => response.text())
+                .then(data => {
+                    if(data && data.trim() === 'OK') {
+                        showToast("Usuario eliminado correctamente", "success");
+                        setTimeout(() => window.location.reload(), 1000);
+                    } else {
+                        // En caso de ERROR (ej: Foreign Key Violation)
+                        showToast("Error al eliminar el usuario (revisa log de servidor)", "error");
+                    }
+                    cerrarModal('deleteModal');
+                })
+                .catch(err => {
+                    console.error("AJAX Error:", err);
+                    showToast("Error de conexión con el servidor", "error");
+                    cerrarModal('deleteModal');
+                });
+            });
+        }
+    });
+</script>
+</body>
+</html>

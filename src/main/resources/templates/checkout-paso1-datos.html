@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1/2 Checkout: Datos, Envío y Facturación</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* CSS GENERALES (Mantenemos los estilos en el header para completitud) */
+        :root {
+            --color-principal: #e63946; 
+            --color-fondo: #f8f9fa; 
+            --color-card-bg: #ffffff; 
+            --color-texto: #333;
+            --sombra-card: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --color-secundario: #6c757d;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--color-fondo);
+            margin: 0;
+            padding: 20px;
+            color: var(--color-texto);
+        }
+        .main-wrapper {
+            max-width: 1100px;
+            margin: 50px auto;
+        }
+        .btn-volver-link {
+            display: inline-flex; align-items: center; gap: 8px; margin-bottom: 25px; 
+            padding: 8px 15px; text-decoration: none; color: var(--color-secundario);
+            background-color: #e9ecef; border-radius: 6px; font-weight: 500;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .btn-volver-link:hover { background-color: #dee2e6; color: var(--color-principal); }
+
+        .checkout-container { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; }
+        h1 { color: var(--color-principal); font-size: 2em; font-weight: 700; margin-bottom: 30px;
+             grid-column: 1 / -1; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
+        .form-content-wrapper { display: flex; flex-direction: column; gap: 30px; }
+        .form-section { background: var(--color-card-bg); padding: 30px; border-radius: 12px;
+            box-shadow: var(--sombra-card); }
+        h2 { font-size: 1.4em; color: var(--color-principal); margin-bottom: 20px;
+             border-left: 4px solid var(--color-principal); padding-left: 10px; font-weight: 600; }
+        h3 { font-size: 1.1em; margin-top: 0; margin-bottom: 15px; color: var(--color-secundario); }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 0.9em; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 1em; }
+        .grid-half { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .btn-siguiente { background-color: var(--color-principal); color: white; padding: 15px 25px;
+            border: none; border-radius: 6px; cursor: pointer; font-size: 1.1em; font-weight: 600;
+            transition: background-color 0.3s; width: 100%; margin-top: 30px; display: block; }
+        .btn-siguiente:hover { background-color: #cc313e; }
+        
+        /* Estilos de Opción de Envío (SHALOM) */
+        .opcion-envio { border: 1px solid #ddd; border-radius: 8px; margin-bottom: 10px; padding: 10px 15px; transition: all 0.2s; }
+        .opcion-envio input[type="radio"] { display: none; }
+        .opcion-envio label { display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: 500; }
+        .opcion-envio input[type="radio"]:checked + label { font-weight: 600; color: var(--color-principal); border-color: var(--color-principal); }
+        .metodo-nombre i { margin-right: 8px; }
+        .metodo-costo { font-weight: 700; color: var(--color-principal); }
+        .nota-envio { font-size: 0.8em; color: #888; margin-top: 15px; }
+
+        /* Estilos de Facturación */
+        .facturacion-toggle { display: flex; align-items: center; margin-bottom: 20px; font-weight: 600; cursor: pointer; color: var(--color-secundario); }
+        .facturacion-toggle input[type="checkbox"] { margin-right: 10px; }
+        #facturacion-form {
+            border: 1px dashed #f1c40f; background-color: #fffde7; padding: 15px;
+            border-radius: 8px; margin-bottom: 30px; display: none; 
+        }
+        
+        /* Estilos del Resumen Sidebar */
+        .resumen-sidebar { background-color: #f1ffef; padding: 20px; border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: fit-content; border: 1px solid #ddd; }
+        .resumen-sidebar h3 { border-bottom: 2px solid var(--color-principal); padding-bottom: 10px;
+            margin-top: 0; margin-bottom: 20px; color: var(--color-texto); font-size: 1.2em; }
+        .productos-header, .producto-resumen-item { display: grid; grid-template-columns: 2fr 1fr 1.5fr; padding: 8px 0; }
+        .productos-header { font-weight: 700; color: var(--color-texto); border-bottom: 1px solid #ccc; margin-bottom: 5px; }
+        .producto-resumen-item { color: #555; border-bottom: 1px dotted #eee; }
+        .col-cantidad { text-align: center; }
+        .col-subtotal { text-align: right; font-weight: 600; white-space: nowrap; }
+        .resumen-line { display: flex; justify-content: space-between; padding: 8px 0; font-size: 0.95em; }
+        .resumen-line.total { font-weight: 700; font-size: 1.2em; margin-top: 15px; border-top: 2px solid #ccc; padding-top: 10px; }
+        .resumen-line.total span:last-child { color: var(--color-principal); font-size: 1.1em; }
+        
+        @media (max-width: 1000px) { .checkout-container { grid-template-columns: 1fr; } .resumen-sidebar { order: -1; } }
+    </style>
+</head>
+<body>
+    <div class="main-wrapper">
+        
+        <a th:href="@{/usuario/carrito}" class="btn-volver-link">
+            <i class="fas fa-arrow-left"></i> Volver al Carrito
+        </a>
+
+        <div class="checkout-container">
+            <h1><i class="fas fa-shipping-fast"></i> Finalizar Compra (Paso 1 de 2)</h1>
+            
+            <div th:if="${error}" class="alert alert-danger" style="grid-column: 1 / -1; color: var(--color-principal); border: 1px solid var(--color-principal); padding: 10px; border-radius: 6px;">
+                <span th:text="${error}">Mensaje de error del servidor.</span>
+            </div>
+            
+            <form th:action="@{/checkout/datos}" th:object="${checkoutData}" method="post">
+                
+                <div class="form-content-wrapper">
+                    
+                    <section class="form-section">
+                        <h2>1. Datos de Contacto y Entrega</h2>
+                        
+                        <h3>Información Personal</h3>
+                        <div class="grid-half">
+                            <div class="form-group"><label for="nombre">Nombre Completo</label><input type="text" id="nombre" th:field="*{nombre}" required placeholder="Ej: Juan Pérez"></div>
+                            <div class="form-group"><label for="telefono">Teléfono</label><input type="tel" id="telefono" th:field="*{telefono}" required placeholder="Ej: 987654321"></div>
+                        </div>
+                        <div class="form-group"><label for="email">Correo Electrónico</label><input type="email" id="email" th:field="*{email}" required placeholder="ejemplo@dominio.com"></div>
+                        
+                        <hr style="margin: 25px 0; border-color: #eee;">
+                        
+                        <h3>Dirección de Envío</h3>
+                        <div class="form-group"><label for="direccion">Dirección Completa (Calle, Av., No.)</label><input type="text" id="direccion" th:field="*{direccion}" required placeholder="Ej: Av. Argentina 327"></div>
+                        <div class="form-group"><label for="referencia">Referencia (Opcional)</label><input type="text" id="referencia" th:field="*{referencia}" placeholder="Ej: Frente al parque, puerta verde"></div>
+                        
+                        <div class="grid-half">
+                            <div class="form-group">
+                                <label for="departamento">Departamento</label>
+                                <select id="departamento" th:field="*{departamento}" required>
+                                    <option value="">Seleccione...</option>
+                                    <option value="Lima">Lima</option>
+                                    <option value="Arequipa">Arequipa</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label for="distrito">Distrito</label><input type="text" id="distrito" th:field="*{distrito}" required placeholder="Ej: La Victoria"></div>
+                        </div>
+                    </section>
+                    
+                    <section class="form-section">
+                        <h2>2. Opciones de Envío y Facturación</h2>
+                        
+                        <h3>Método de Envío</h3>
+                        <div class="form-group" id="opciones-envio">
+                            <div class="opcion-envio">
+                                <input type="radio" id="envio-propio" th:field="*{metodoEnvio}" value="PROPIO" checked>
+                                <label for="envio-propio">
+                                    <span class="metodo-nombre"><i class="fas fa-truck-moving"></i> Envío Propio (G. Antonio)</span>
+                                    <span class="metodo-costo">S/ 50.00</span>
+                                </label>
+                            </div>
+                            <div class="opcion-envio">
+                                <input type="radio" id="envio-shalom" th:field="*{metodoEnvio}" value="SHALALOM">
+                                <label for="envio-shalom">
+                                    <span class="metodo-nombre"><i class="fas fa-box-open"></i> Envío por SHALOM (Tercero)</span>
+                                    <span class="metodo-costo">S/ 70.00*</span>
+                                </label>
+                            </div>
+                            <div class="opcion-envio">
+                                <input type="radio" id="envio-recojo" th:field="*{metodoEnvio}" value="RECOJO_TIENDA">
+                                <label for="envio-recojo">
+                                    <span class="metodo-nombre"><i class="fas fa-store"></i> Recojo en Tienda / Almacén</span>
+                                    <span class="metodo-costo">Gratis</span>
+                                </label>
+                            </div>
+                            <p class="nota-envio">* El costo para SHALOM es referencial y puede variar según peso/destino.</p>
+                        </div>
+                        
+                        <hr style="margin: 25px 0; border-color: #eee;">
+                        
+                        <h3>Facturación Electrónica</h3>
+                        
+                        <div class="facturacion-toggle" id="facturacion-toggle-btn">
+                            <input type="checkbox" id="check-factura" th:field="*{solicitaFactura}">
+                            <label for="check-factura"><i class="fas fa-file-invoice"></i> Requiero Factura Electrónica (RUC)</label>
+                        </div>
+                        
+                        <div id="facturacion-form">
+                            <div class="form-group">
+                                <label for="ruc">RUC / DNI</label>
+                                <input type="text" id="ruc" th:field="*{ruc}" placeholder="Ej: 20XXXXXXXXX">
+                            </div>
+                            <div class="form-group">
+                                <label for="razon-social">Razón Social / Nombre Legal</label>
+                                <input type="text" id="razon-social" th:field="*{razonSocial}" placeholder="Ej: GRUPO ANTONIO S.A.C.">
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <button type="submit" class="btn-siguiente">
+                        Ir a Métodos de Pago <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </form>
+
+            <aside class="resumen-sidebar">
+                <h3>Resumen de la Compra</h3>
+                
+                <div class="productos-resumen-list">
+                    <div class="productos-header">
+                        <span class="col-nombre">Producto</span>
+                        <span class="col-cantidad">Cant.</span>
+                        <span class="col-subtotal">Subtotal</span>
+                    </div>
+                    <div th:each="item : ${checkoutData.itemsCarrito}" class="producto-resumen-item">
+                        <span class="col-nombre" th:text="${item.nombre}">Producto Ejemplo</span>
+                        <span class="col-cantidad" th:text="${item.cantidad}">2</span>
+                        <span class="col-subtotal" th:text="${#numbers.formatCurrency(item.precio * item.cantidad)}">S/ 4,000.00</span>
+                    </div>
+                    
+                </div>
+
+                <hr style="margin: 15px 0; border-color: #ddd;">
+
+                <div class="resumen-line"><span>Subtotal Productos:</span><span th:text="${#numbers.formatCurrency(checkoutData.subtotal)}">S/ 4,500.00</span></div>
+                <div class="resumen-line" id="linea-envio"><span>Costo de Envío:</span><span id="valor-envio" th:text="${#numbers.formatCurrency(checkoutData.costoEnvio)}">S/ 50.00</span></div>
+                <div class="resumen-line"><span>IGV (18%):</span><span th:text="${#numbers.formatCurrency(checkoutData.total - checkoutData.subtotal - checkoutData.costoEnvio)}">S/ 810.00</span></div>
+                
+                <div class="resumen-line total">
+                    <span>Total a Pagar:</span>
+                    <span th:text="${#numbers.formatCurrency(checkoutData.total)}">S/ 5,360.00</span>
+                </div>
+            </aside>
+        </div>
+    </div>
+    
+    <script>
+        // JS para el toggle de Facturación (MANTENER)
+        document.addEventListener('DOMContentLoaded', () => {
+            const facturaCheckbox = document.getElementById('check-factura');
+            const facturacionForm = document.getElementById('facturacion-form');
+            
+            // Inicializar y controlar la visibilidad del formulario de facturación
+            function toggleFacturacion() {
+                facturacionForm.style.display = facturaCheckbox.checked ? 'block' : 'none';
+            }
+            
+            facturaCheckbox.addEventListener('change', toggleFacturacion);
+            toggleFacturacion(); // Llama al iniciar para reflejar el estado inicial de Spring
+        });
+        
+        // NOTA: La lógica de actualización del resumen YA NO va aquí, la hace Spring en el POST /datos.
+    </script>
+</body>
+</html>
